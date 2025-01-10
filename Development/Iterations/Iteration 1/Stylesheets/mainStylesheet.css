@@ -1,0 +1,34 @@
+QWidget {
+    background-color: deepskyblue;
+    color: black;
+}
+
+QGraphicsView {
+    background-color: white;
+    border-radius: 10px;
+}
+
+QLabel {
+    background-color: transparent;
+    color: black;
+}
+
+QPushButton {
+    background-color: skyblue;
+    border-bottom: cornflowerblue 2px solid;
+    border-radius: 5px;
+    color: black;
+}
+
+QPushButton:hover{
+    border: lightskyblue 2px solid;
+}
+
+QLineEdit {
+    background-color: white;
+    border-bottom: rgb(216, 216, 216) 2px solid;
+}
+
+QLineEdit:focus{
+    border-bottom: rgb(190, 190, 190) 2px solid;
+}

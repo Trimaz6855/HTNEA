@@ -1,4 +1,5 @@
 matplotlib
 sympy
-PyQt5
+PyQt6
 numpy
+pyodbc
