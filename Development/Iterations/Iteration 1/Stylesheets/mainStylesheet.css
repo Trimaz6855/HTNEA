@@ -1,6 +1,7 @@
 QWidget {
     background-color: deepskyblue;
     color: black;
+    /* font-family: "Monaco", "Lucida Console", Serif; */
 }
 
 QGraphicsView {

@@ -1,13 +1,14 @@
 # Importing the external PyQt interface classes I have created.
 from matplotlib.backend_tools import cursors
 
-from Login import Ui_loginWindow
+from login import Ui_loginWindow
 from registration import Ui_regWindow
 
 # Importing python libraries.
 from PyQt6.QtWidgets import QMainWindow, QApplication, QLineEdit, QMessageBox, QDialog
 from PyQt6.QtGui import QIcon, QWindow
 import pyodbc
+import re
 
 # Creates the database connection string.
 conStr = (r"DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};"
@@ -17,7 +18,7 @@ conStr = (r"DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};"
 windows = []
 
 # Creating the login page class.
-class loginWindow(QMainWindow):# 
+class loginWindow(QDialog):#
     # Login window constructor method.
     def __init__(self):
         # Accesses the parent classes constructor method.
@@ -137,19 +138,21 @@ class loginWindow(QMainWindow):#
             # Asks the user to enter a username.
             QMessageBox.critical(self, "Error", "Please Enter a Username!")
 
-    # Defines the to registration function.
+    # Defines the function to open the registration page.
     def toReg(self):
-        self.hide()
-        registration = regWindow()
-        registration.show()
-        windows.append(registration)
-
-    # Overrides the close event to hide the window rather than closing it.
-    def closeEvent(self, event):
-        self.hide()
+        # Closes the login window.
+        self.close()
+        # Instantiates a new dialog object.
+        dialog = QDialog()
+        # Instantiates a new registration window.
+        reg = regWindow()
+        # Shows the registration window.
+        reg.show()
+        # Executes the registration window.
+        reg.exec()
 
 # Defines the registration window class.
-class regWindow(QMainWindow):
+class regWindow(QDialog):
     # Defines the constructor method.
     def __init__(self):
         # Accesses the parent class' constructor method.
@@ -162,20 +165,155 @@ class regWindow(QMainWindow):
         with open("../Stylesheets/mainStylesheet.css", "r") as f:
             style = f.read()
             self.setStyleSheet(style)
+
         # Sets up the login button.
         self.ui.btnRegLogin.clicked.connect(self.toLogin)
 
+        # Sets up the register button.
+        self.ui.btnRegister.clicked.connect(self.register)
+
+        # Sets up the password toggle functionality.
+        self.ui.btnRegPVis.clicked.connect(self.togglePassword)
+        # Initialises the password visibility variable.
+        self.regPVis = False
+        # Sets the default visibility of the passwords.
+        self.ui.txtRegPword.setEchoMode(QLineEdit.EchoMode.Password)
+        self.ui.txtRegConPword.setEchoMode(QLineEdit.EchoMode.Password)
+        # Sets the icon of the password visibility button.
+        self.ui.btnRegPVis.setIcon(QIcon("../Images/togglePassword.png"))
+
+    # Defines the toggle password function.
+    def togglePassword(self):
+        # Checks if the passwords are visible.
+        if self.regPVis == True:
+            # Toggles the password visibility variable.
+            self.regPVis = False
+            # Changes the icon of the password visibility button.
+            self.ui.btnRegPVis.setIcon(QIcon("../Images/togglePassword.png"))
+            # Hides the passwords.
+            self.ui.txtRegPword.setEchoMode(QLineEdit.EchoMode.Password)
+            self.ui.txtRegConPword.setEchoMode(QLineEdit.EchoMode.Password)
+        else:
+            # Toggles the password visibility variable.
+            self.regPVis = True
+            # Changes the icon of the password visibility button.
+            self.ui.btnRegPVis.setIcon(QIcon("../Images/togglePassword2.png"))
+            # Hides the passwords.
+            self.ui.txtRegPword.setEchoMode(QLineEdit.EchoMode.Normal)
+            self.ui.txtRegConPword.setEchoMode(QLineEdit.EchoMode.Normal)
+
     # Defines the function that takes the user to the login page.
     def toLogin(self):
-        self.hide()
+        # Closes the registration window.
+        self.close()
+        # Instantiates a new dialog object.
+        dialog = QDialog()
+        # Instantiates a new loginWindow object.
+        login = loginWindow()
+        # Shows the login window.
         login.show()
+        # Executes the login window.
+        login.exec()
 
-    # Overrides the close event to hide the window rather than close it.
-    def closeEvent(self, event):
-        self.hide()
+    # Defines the register function.
+    def register(self):
+        # Temporarily stores the data entered by the user.
+        self.regUname = self.ui.txtRegUname.text().strip()
+        self.regPword = self.ui.txtRegPword.text().strip()
+        self.regConPword = self.ui.txtRegConPword.text().strip()
+        self.regPHint = self.ui.txtRegPHint.text()
 
+        # Checks that none of the data fields are empty.
+        if (len(self.regUname) != 0) and (len(self.regPword) != 0) and (len(self.regConPword) != 0) and (len(self.regPHint) != 0):
+
+            # Checks that the password fields match.
+            if (self.regPword == self.regConPword):
+                # Opens a connection with the database.
+                self.conn = pyodbc.connect(conStr)
+                # Creates a cursor to navigate the database.
+                self.cursor = self.conn.cursor()
+                # Attempts to find an account with the username the user has entered.
+                self.cursor.execute(f"SELECT * FROM Accounts WHERE uname = '{self.regUname}'")
+                # Attempts to store any accounts retrieved.
+                self.results = self.cursor.fetchone()
+                # Checks that there were no accounts retrieved.
+
+                if not self.results:
+                    # Searches the password to check it meets the required criteria.
+                    # Searches for any lower case letters and temporarily stores them.
+                    self.lower = re.findall(r"[a-z]", self.regPword)
+                    # Searches for any upper case letters and temporarily stores them.
+                    self.upper = re.findall(r"[A-Z]", self.regPword)
+                    # Searches for any numbers and temporarily stores them.
+                    self.num = re.findall(r"[0-9]", self.regPword)
+                    # Searches for any special characters and temporarily stores them.
+                    self.specialChar = re.findall(r"[\!\"\£\$\%\^\&\*\(\)\+\=\¬\`\|\:\;\@\#\~\,\.\<\>\/\?\{\}\[\]\'-]", self.regPword)
+
+                    # Checks that the password contains at least 1 of each of the required characters.
+                    if (len(self.lower) > 0) and (len(self.upper) > 0) and (len(self.num) > 0) and (len(self.specialChar) > 0):
+                        # Inserts a new account record into the database.
+                        self.cursor.execute(f"INSERT INTO Accounts (uname, pword, pwordHint) VALUES ('{self.regUname}', '{self.regPword}', '{self.regPHint}')")
+                        # Commits the changes to the database.
+                        self.conn.commit()
+                        # Closes the database connection.
+                        self.conn.close()
+                        # Displays a success message.
+                        QMessageBox.information(self, "Account Creation Success", "Account Created Successfully!")
+                        # Closes the registration page.
+                        self.close()
+                        # Opens the login page.
+                        self.toLogin()
+
+                    else:
+                        # Displays an error message.
+                        QMessageBox.critical(self, "Error", "Password Must Contain at Least 1 Upper, 1 Lower Case Letter, 1 Number and 1 Special Character.")
+
+                # If any were retrieved.
+                else:
+                    # Displays an error message.
+                    QMessageBox.critical(self, "Error", "An account with that username already exists!")
+
+            else:
+                # Displays an error message.
+                QMessageBox.critical(self, "Error", "Passwords do not match!")
+
+        # Checks if the username is empty.
+        elif (len(self.regUname) == 0):
+            # Displays an error message.
+            QMessageBox.critical(self, "Error", "Please Enter a Username!")
+
+        # Checks if the password is empty.
+        elif (len(self.regPword) == 0):
+            # Displays an error message.
+            QMessageBox.critical(self, "Error", "Please Enter a Password!")
+
+        # Checks if the confirm password box is empty.
+        elif (len(self.regConPword)) == 0:
+            # Displays an error message.
+            QMessageBox.critical(self, "Error", "Please Confirm your Password!")
+
+        # Checks if the forgot password hint box is empty.
+        elif (len(self.regPHint)) == 0:
+            # Displays an error message.
+            QMessageBox.critical(self, "Error", "Please Enter a Forgot Password Hint!")
+
+        # Checks if the username is too long.
+        elif (len(self.regUname) > 20):
+            # Displays an error message.
+            QMessageBox.critical(self, "Error", "Username is too long!")
+
+        # Checks the password is not too long.
+        elif (len(self.regPword) > 20) or (len(self.regConPword) > 20):
+            # Displays an error message.
+            QMessageBox.critical(self, "Error", "Password is too long!")
+
+# Runs the program if the file ran is the main file.
 if __name__ == '__main__':
+    # Instantiates the application.
     app = QApplication([])
+    # Instantiates a new loginWindow instance.
     login = loginWindow()
+    # Shows the login window.
     login.show()
+    # Executes the application.
     app.exec()

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>regWindow</class>
- <widget class="QMainWindow" name="regWindow">
+ <widget class="QDialog" name="regWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,158 +11,156 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Dialog</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="lblRegTitle">
-    <property name="geometry">
-     <rect>
-      <x>310</x>
-      <y>70</y>
-      <width>191</width>
-      <height>101</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>40</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Register</string>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="graphicsView">
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>40</y>
-      <width>431</width>
-      <height>521</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="txtRegUname">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>200</y>
-      <width>231</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="placeholderText">
-     <string>Enter Username:</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="txtRegPword">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>240</y>
-      <width>231</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="placeholderText">
-     <string>Enter Password:</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="txtRegConPword">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>280</y>
-      <width>231</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="placeholderText">
-     <string>Confirm Password:</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="txtRegPHint">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>320</y>
-      <width>231</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="placeholderText">
-     <string>Forgot Password Hint:</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnRegister">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>380</y>
-      <width>181</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Register</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnRegCancel">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>420</y>
-      <width>181</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Cancel</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnRegLogin">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>460</y>
-      <width>181</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Login</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnRegPVis">
-    <property name="geometry">
-     <rect>
-      <x>482</x>
-      <y>243</y>
-      <width>32</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton {
+  <widget class="QLabel" name="lblRegTitle">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>70</y>
+     <width>191</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>40</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Register</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="txtRegConPword">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>280</y>
+     <width>231</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="placeholderText">
+    <string>Confirm Password:</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnRegCancel">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>420</y>
+     <width>181</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Cancel</string>
+   </property>
+  </widget>
+  <widget class="QGraphicsView" name="graphicsView">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>40</y>
+     <width>431</width>
+     <height>521</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnRegPVis">
+   <property name="geometry">
+    <rect>
+     <x>472</x>
+     <y>243</y>
+     <width>32</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
 	background-color: rgba(255, 255, 255, 0);
 	border-color: rgba(255, 255, 255, 0);
 }</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <zorder>graphicsView</zorder>
-   <zorder>lblRegTitle</zorder>
-   <zorder>txtRegUname</zorder>
-   <zorder>txtRegPword</zorder>
-   <zorder>txtRegConPword</zorder>
-   <zorder>txtRegPHint</zorder>
-   <zorder>btnRegister</zorder>
-   <zorder>btnRegCancel</zorder>
-   <zorder>btnRegLogin</zorder>
-   <zorder>btnRegPVis</zorder>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
   </widget>
+  <widget class="QLineEdit" name="txtRegUname">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>200</y>
+     <width>231</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="placeholderText">
+    <string>Enter Username:</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnRegLogin">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>460</y>
+     <width>181</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Login</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="txtRegPHint">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>320</y>
+     <width>231</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="placeholderText">
+    <string>Forgot Password Hint:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="txtRegPword">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>240</y>
+     <width>231</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="placeholderText">
+    <string>Enter Password:</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnRegister">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>380</y>
+     <width>181</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Register</string>
+   </property>
+  </widget>
+  <zorder>graphicsView</zorder>
+  <zorder>txtRegUname</zorder>
+  <zorder>txtRegPHint</zorder>
+  <zorder>txtRegConPword</zorder>
+  <zorder>lblRegTitle</zorder>
+  <zorder>txtRegPword</zorder>
+  <zorder>btnRegCancel</zorder>
+  <zorder>btnRegister</zorder>
+  <zorder>btnRegLogin</zorder>
+  <zorder>btnRegPVis</zorder>
  </widget>
  <resources/>
  <connections/>
