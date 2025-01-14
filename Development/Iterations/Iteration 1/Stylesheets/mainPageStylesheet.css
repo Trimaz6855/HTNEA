@@ -1,0 +1,24 @@
+QWidget {
+    background-color: deepskyblue;
+    color: black;
+    /* font-family: "Monaco", "Lucida Console", Serif; */
+}
+
+QGraphicsView {
+    background-color: white;
+    border-radius: 10px;
+}
+
+QLabel {
+    background-color: transparent;
+    color: black;
+}
+
+QPushButton {
+    background-color: skyblue;
+    color: black;
+}
+
+QPushButton:hover{
+    border: lightskyblue 2px solid;
+}

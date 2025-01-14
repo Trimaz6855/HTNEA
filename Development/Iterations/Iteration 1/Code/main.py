@@ -1,12 +1,15 @@
 # Importing the external PyQt interface classes I have created.
+from PyQt5.QtCore import Qt
 from matplotlib.backend_tools import cursors
 
 from login import Ui_loginWindow
 from registration import Ui_regWindow
+from mainWindow import Ui_mainPage
 
 # Importing python libraries.
 from PyQt6.QtWidgets import QMainWindow, QApplication, QLineEdit, QMessageBox, QDialog
 from PyQt6.QtGui import QIcon, QWindow
+from PyQt6.QtCore import Qt
 import pyodbc
 import re
 
@@ -14,8 +17,8 @@ import re
 conStr = (r"DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};"
           r"DBQ=..\programFiles.accdb;")
 
-# Creates a global variable to keep track of which windows are open.
-windows = []
+# Stores the user's account.
+account = []
 
 # Creating the login page class.
 class loginWindow(QDialog):#
@@ -87,6 +90,9 @@ class loginWindow(QDialog):#
                 if self.account[2] == self.loginPWord:
                     # Displays a welcome message to the user.
                     QMessageBox.information(self, "Login Success!", f"Welcome, {self.loginUname}")
+                    # Stores the users account.
+                    account = self.account
+                    self.toHome()
                 else:
                     # Displays an error message.
                     QMessageBox.critical(self, "Error", "Incorrect Password!")
@@ -150,6 +156,11 @@ class loginWindow(QDialog):#
         reg.show()
         # Executes the registration window.
         reg.exec()
+
+    # Defines the function to open the home page.
+    def toHome(self):
+        self.close()
+        mainPage.show()
 
 # Defines the registration window class.
 class regWindow(QDialog):
@@ -307,13 +318,54 @@ class regWindow(QDialog):
             # Displays an error message.
             QMessageBox.critical(self, "Error", "Password is too long!")
 
+# Defines the main menu class.
+class mainPage(QMainWindow):
+    # Defines the constructor method.
+    def __init__(self):
+        # Accesses the parent class constructor method.
+        super().__init__()
+        # Instantiates the window's ui as an instance of the Ui_mainPage class.
+        self.ui = Ui_mainPage()
+        # Sets up the ui.
+        self.ui.setupUi(self)
+
+        # Adds the stylesheet.
+        with open("../Stylesheets/mainPageStylesheet.css", "r") as f:
+            style = f.read()
+            self.setStyleSheet(style)
+
+        # Sets up the Header labels and dropdown menus.
+        self.ui.lblMainSci.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.ui.lblMainAcc.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.ui.lblMainFunc.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.ui.lblMainData.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.ui.lblMainSci.setStyleSheet("QLabel { background-color: skyblue; border-bottom: cornflowerblue 2px solid; color: black;}")
+        self.ui.btnMainSciDrp.setIcon(QIcon("../Images/dropdown1.png"))
+        self.ui.btnMainTrig.setHidden(True)
+        self.ui.btnMainStats.setHidden(True)
+        self.ui.btnMainLogout.setHidden(True)
+        self.ui.btnMainSaved.setHidden(True)
+
+        # Checks if the user is logged in.
+        if account == []:
+            # Makes the login button the visible button.
+            self.ui.lblMainAcc.setHidden(True)
+            self.ui.btnMainAccDrp.setHidden(True)
+        else:
+            # Makes the account text and dropdown the only visible parts.
+            self.ui.btnMainLogin.setHidden(True)
+
+        self.mainSciDrpdwn = False
+        self.mainAccDrpdwn = False
+
+
 # Runs the program if the file ran is the main file.
 if __name__ == '__main__':
     # Instantiates the application.
     app = QApplication([])
     # Instantiates a new loginWindow instance.
-    login = loginWindow()
+    mainPage = mainPage()
     # Shows the login window.
-    login.show()
+    mainPage.show()
     # Executes the application.
     app.exec()
