@@ -12,6 +12,7 @@ QGraphicsView {
 QLabel {
     background-color: transparent;
     color: black;
+    text-align: center;
 }
 
 QPushButton {
@@ -21,4 +22,25 @@ QPushButton {
 
 QPushButton:hover{
     border: lightskyblue 2px solid;
+}
+
+QLabel#lblMainSci,QLabellblMainAcc {
+    background-color: skyblue;
+    border-bottom: cornflowerblue 2px solid;
+    color: black;
+    text-align: center;
+}
+
+QPushButton#btnMainHome,QPushButton#btnMainFunCat,QPushButton#btnMainLogin {
+    background-color: skyblue;
+    border-radius: 0;
+    color: black;
+}
+
+QPushButton#btnMainHome:hover,QPushButton#btnMainFunCat:hover,QPushButton#btnMainLogin:hover {
+    border: lightskyblue 2px solid;
+}
+
+QFrame {
+    background-color: white;
 }

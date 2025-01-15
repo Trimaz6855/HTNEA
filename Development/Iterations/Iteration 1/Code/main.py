@@ -329,22 +329,27 @@ class mainPage(QMainWindow):
         # Sets up the ui.
         self.ui.setupUi(self)
 
+        # Sets up the login button.
+        self.ui.btnMainLogin.clicked.connect(self.toLogin)
+
         # Adds the stylesheet.
         with open("../Stylesheets/mainPageStylesheet.css", "r") as f:
             style = f.read()
             self.setStyleSheet(style)
 
-        # Sets up the Header labels and dropdown menus.
+        # Aligns the text inside the labels.
         self.ui.lblMainSci.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.ui.lblMainAcc.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.ui.lblMainFunc.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.ui.lblMainData.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.ui.lblMainSci.setStyleSheet("QLabel { background-color: skyblue; border-bottom: cornflowerblue 2px solid; color: black;}")
+
+        # Sets the dropdown arrow icons.
         self.ui.btnMainSciDrp.setIcon(QIcon("../Images/dropdown1.png"))
-        self.ui.btnMainTrig.setHidden(True)
-        self.ui.btnMainStats.setHidden(True)
-        self.ui.btnMainLogout.setHidden(True)
-        self.ui.btnMainSaved.setHidden(True)
+        self.ui.btnMainAccDrp.setIcon(QIcon("../Images/dropdown1.png"))
+
+        # Hides the dropdown buttons.
+        self.ui.frameAcc.setVisible(False)
+        self.ui.frameSci.setVisible(False)
 
         # Checks if the user is logged in.
         if account == []:
@@ -355,8 +360,22 @@ class mainPage(QMainWindow):
             # Makes the account text and dropdown the only visible parts.
             self.ui.btnMainLogin.setHidden(True)
 
+        # Creates the dropdown flag variables.
         self.mainSciDrpdwn = False
         self.mainAccDrpdwn = False
+
+    # Defines the function that takes the user to the login page.
+    def toLogin(self):
+        # Hides the main menu.
+        self.hide()
+        # Instantiates a new dialog object.
+        dialog = QDialog()
+        # Instantiates a new loginWindow object.
+        login = loginWindow()
+        # Shows the login window.
+        login.show()
+        # Executes the login window.
+        login.exec()
 
 
 # Runs the program if the file ran is the main file.
