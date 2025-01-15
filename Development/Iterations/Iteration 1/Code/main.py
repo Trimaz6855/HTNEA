@@ -1,9 +1,5 @@
 # Importing the external PyQt interface classes I have created.
-import sys
-
 from PyQt5.QtCore import Qt
-from matplotlib.backend_tools import cursors
-
 from login import Ui_loginWindow
 from registration import Ui_regWindow
 from mainWindow import Ui_mainPage
@@ -394,7 +390,6 @@ class mainPage(QMainWindow):
     def showEvent(self, a0):
         # Checks if the user is logged in.
         self.accountCheck()
-        print(account)
 
     # Defines a function to check if the user is logged in.
     def accountCheck(self):
