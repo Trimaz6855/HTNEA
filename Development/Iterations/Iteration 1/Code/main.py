@@ -1,4 +1,6 @@
 # Importing the external PyQt interface classes I have created.
+import sys
+
 from PyQt5.QtCore import Qt
 from matplotlib.backend_tools import cursors
 
@@ -46,10 +48,13 @@ class loginWindow(QDialog):#
         self.ui.btnLogin.clicked.connect(self.login)
 
         # Sets up the forgot password function.
-        self.ui.btnFPword.clicked.connect(self.forgotPassword)
+        self.ui.btnLoginFPword.clicked.connect(self.forgotPassword)
 
         # Sets up the function to open the registration page.
         self.ui.btnLoginRegister.clicked.connect(self.toReg)
+
+        # Sets up the cancel button.
+        self.ui.btnLoginCancel.clicked.connect(self.toHome)
 
     # Defines the password toggle function.
     def togglePVis(self):
@@ -91,7 +96,8 @@ class loginWindow(QDialog):#
                     # Displays a welcome message to the user.
                     QMessageBox.information(self, "Login Success!", f"Welcome, {self.loginUname}")
                     # Stores the users account.
-                    account = self.account
+                    account.append(self.account)
+                    # Sends the user to the home page.
                     self.toHome()
                 else:
                     # Displays an error message.
@@ -159,7 +165,9 @@ class loginWindow(QDialog):#
 
     # Defines the function to open the home page.
     def toHome(self):
+        # Closes the login page.
         self.close()
+        # Shows the main window.
         mainPage.show()
 
 # Defines the registration window class.
@@ -183,13 +191,19 @@ class regWindow(QDialog):
         # Sets up the register button.
         self.ui.btnRegister.clicked.connect(self.register)
 
+        # Sets up the cancel button.
+        self.ui.btnRegCancel.clicked.connect(self.toHome)
+
         # Sets up the password toggle functionality.
         self.ui.btnRegPVis.clicked.connect(self.togglePassword)
+
         # Initialises the password visibility variable.
         self.regPVis = False
+
         # Sets the default visibility of the passwords.
         self.ui.txtRegPword.setEchoMode(QLineEdit.EchoMode.Password)
         self.ui.txtRegConPword.setEchoMode(QLineEdit.EchoMode.Password)
+
         # Sets the icon of the password visibility button.
         self.ui.btnRegPVis.setIcon(QIcon("../Images/togglePassword.png"))
 
@@ -318,6 +332,13 @@ class regWindow(QDialog):
             # Displays an error message.
             QMessageBox.critical(self, "Error", "Password is too long!")
 
+    # Defines the function to open the home page.
+    def toHome(self):
+        # Closes the login page.
+        self.close()
+        # Shows the main window.
+        mainPage.show()
+
 # Defines the main menu class.
 class mainPage(QMainWindow):
     # Defines the constructor method.
@@ -338,27 +359,19 @@ class mainPage(QMainWindow):
             self.setStyleSheet(style)
 
         # Aligns the text inside the labels.
-        self.ui.lblMainSci.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.ui.lblMainAcc.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.ui.lblMainFunc.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.ui.lblMainData.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        # Sets the dropdown arrow icons.
-        self.ui.btnMainSciDrp.setIcon(QIcon("../Images/dropdown1.png"))
-        self.ui.btnMainAccDrp.setIcon(QIcon("../Images/dropdown1.png"))
 
         # Hides the dropdown buttons.
         self.ui.frameAcc.setVisible(False)
         self.ui.frameSci.setVisible(False)
 
-        # Checks if the user is logged in.
-        if account == []:
-            # Makes the login button the visible button.
-            self.ui.lblMainAcc.setHidden(True)
-            self.ui.btnMainAccDrp.setHidden(True)
-        else:
-            # Makes the account text and dropdown the only visible parts.
-            self.ui.btnMainLogin.setHidden(True)
+        # Sets up the dropdown menu toggle buttons.
+        self.ui.btnMainSciDrp.clicked.connect(self.sciFuncDropdown)
+        self.ui.btnMainAccDrp.clicked.connect(self.accountDropdown)
+
+        # Sets up the logout button.
+        self.ui.btnMainLogout.clicked.connect(self.logout)
 
         # Creates the dropdown flag variables.
         self.mainSciDrpdwn = False
@@ -377,9 +390,69 @@ class mainPage(QMainWindow):
         # Executes the login window.
         login.exec()
 
+    # Defines a new show event function.
+    def showEvent(self, a0):
+        # Checks if the user is logged in.
+        self.accountCheck()
+        print(account)
+
+    # Defines a function to check if the user is logged in.
+    def accountCheck(self):
+        # Checks if the user is logged in.
+        if account == []:
+            # Makes the login button the visible button.
+            self.ui.btnMainAccDrp.setHidden(True)
+            self.ui.btnMainLogin.setHidden(False)
+            self.ui.btnMainAccDrp.setText("Account v")
+            self.mainLoggedIn = False
+        else:
+            # Makes the account text and dropdown the only visible parts.
+            self.ui.btnMainLogin.setHidden(True)
+            self.ui.btnMainAccDrp.setHidden(False)
+            self.ui.btnMainAccDrp.setText(f"Hello, {account[0][1]} v")
+            self.mainLoggedIn = True
+
+    # Defines the account dropdown function.
+    def accountDropdown(self):
+        # Checks if the dropdown menu is not visible.
+        if self.mainAccDrpdwn == False:
+            # Makes the menu visible.
+            self.mainAccDrpdwn = True
+            self.ui.frameAcc.setVisible(True)
+            self.ui.btnMainAccDrp.setText(f"Hello, {account[0][1]} ^")
+            # Checks if the menu is not visible.
+        elif self.mainAccDrpdwn == True:
+            # Hides the menu.
+            self.mainAccDrpdwn = False
+            self.ui.frameAcc.setVisible(False)
+            self.ui.btnMainAccDrp.setText(f"Account v")
+
+    # Defines the scientific functions dropdown function.
+    def sciFuncDropdown(self):
+        # Checks if the dropdown menu is not visible.
+        if self.mainSciDrpdwn == False:
+            # Makes the menu visible.
+            self.mainSciDrpdwn = True
+            self.ui.frameSci.setVisible(True)
+            self.ui.btnMainSciDrp.setText("Scientific Functions ^")
+        # Checks if the dropdown menu is visible.
+        elif self.mainSciDrpdwn == True:
+            # Hides the menu.
+            self.mainSciDrpdwn = False
+            self.ui.frameSci.setVisible(False)
+            self.ui.btnMainSciDrp.setText("Scientific Functions v")
+
+    #Defines the logout function.
+    def logout(self):
+        # Clears the stored account.
+        account.clear()
+        # Calls the account check function to alter the main page.
+        self.accountCheck()
+        # Calls the account dropdown function to hide the account dropdown.
+        self.accountDropdown()
 
 # Runs the program if the file ran is the main file.
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Instantiates the application.
     app = QApplication([])
     # Instantiates a new loginWindow instance.

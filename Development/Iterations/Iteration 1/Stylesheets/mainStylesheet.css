@@ -7,6 +7,7 @@ QWidget {
 QGraphicsView {
     background-color: white;
     border-radius: 10px;
+    border: 2px solid rgb(216, 216, 216);
 }
 
 QLabel {
@@ -14,15 +15,22 @@ QLabel {
     color: black;
 }
 
+QPushButton#btnLoginFPword {
+    border-width: 0px;
+}
+
 QPushButton {
     background-color: skyblue;
-    border-bottom: cornflowerblue 2px solid;
+    border: 1px solid cornflowerblue;
     border-radius: 5px;
     color: black;
 }
 
 QPushButton:hover{
     border: lightskyblue 2px solid;
+    border-radius: 5px;
+    color: dodgerblue;
+    font-size: 13px;
 }
 
 QLineEdit {

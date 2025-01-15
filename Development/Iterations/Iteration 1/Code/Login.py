@@ -13,6 +13,7 @@ class Ui_loginWindow(object):
     def setupUi(self, loginWindow):
         loginWindow.setObjectName("loginWindow")
         loginWindow.resize(800, 600)
+        loginWindow.setMaximumSize(QtCore.QSize(800, 600))
         self.btnLoginPVis = QtWidgets.QPushButton(parent=loginWindow)
         self.btnLoginPVis.setGeometry(QtCore.QRect(473, 294, 32, 32))
         self.btnLoginPVis.setStyleSheet("QPushButton {\n"
@@ -47,12 +48,12 @@ class Ui_loginWindow(object):
         self.btnLoginRegister = QtWidgets.QPushButton(parent=loginWindow)
         self.btnLoginRegister.setGeometry(QtCore.QRect(310, 480, 161, 24))
         self.btnLoginRegister.setObjectName("btnLoginRegister")
-        self.btnFPword = QtWidgets.QPushButton(parent=loginWindow)
-        self.btnFPword.setGeometry(QtCore.QRect(340, 340, 111, 24))
-        self.btnFPword.setStyleSheet("QPushButton {\n"
+        self.btnLoginFPword = QtWidgets.QPushButton(parent=loginWindow)
+        self.btnLoginFPword.setGeometry(QtCore.QRect(340, 340, 111, 24))
+        self.btnLoginFPword.setStyleSheet("QPushButton {\n"
 "    background-color: rgba(255, 255, 255, 0);\n"
 "}")
-        self.btnFPword.setObjectName("btnFPword")
+        self.btnLoginFPword.setObjectName("btnLoginFPword")
         self.txtLoginUname = QtWidgets.QLineEdit(parent=loginWindow)
         self.txtLoginUname.setGeometry(QtCore.QRect(280, 220, 231, 31))
         self.txtLoginUname.setStyleSheet("")
@@ -62,7 +63,7 @@ class Ui_loginWindow(object):
         self.btnLogin.setObjectName("btnLogin")
         self.gVLogin.raise_()
         self.txtLoginUname.raise_()
-        self.btnFPword.raise_()
+        self.btnLoginFPword.raise_()
         self.btnLoginRegister.raise_()
         self.txtLoginPWord.raise_()
         self.btnLoginCancel.raise_()
@@ -80,7 +81,7 @@ class Ui_loginWindow(object):
         self.btnLoginCancel.setText(_translate("loginWindow", "Cancel"))
         self.lblLogin.setText(_translate("loginWindow", "Login"))
         self.btnLoginRegister.setText(_translate("loginWindow", "Register"))
-        self.btnFPword.setText(_translate("loginWindow", "Forgot Password?"))
+        self.btnLoginFPword.setText(_translate("loginWindow", "Forgot Password?"))
         self.txtLoginUname.setPlaceholderText(_translate("loginWindow", "Enter Username:"))
         self.btnLogin.setText(_translate("loginWindow", "Login"))
 

@@ -13,6 +13,7 @@ class Ui_regWindow(object):
     def setupUi(self, regWindow):
         regWindow.setObjectName("regWindow")
         regWindow.resize(800, 600)
+        regWindow.setMaximumSize(QtCore.QSize(800, 600))
         self.lblRegTitle = QtWidgets.QLabel(parent=regWindow)
         self.lblRegTitle.setGeometry(QtCore.QRect(300, 70, 191, 101))
         font = QtGui.QFont()
