@@ -244,8 +244,18 @@ class regWindow(QDialog):
         self.regConPword = self.ui.txtRegConPword.text().strip()
         self.regPHint = self.ui.txtRegPHint.text()
 
+        # Checks the password is not too long.
+        if (len(self.regPword) > 20) or (len(self.regConPword) > 20):
+            # Displays an error message.
+            QMessageBox.critical(self, "Error", "Password is too long!")
+
+        # Checks if the username is too long.
+        elif (len(self.regUname) > 20):
+            # Displays an error message.
+            QMessageBox.critical(self, "Error", "Username is too long!")
+
         # Checks that none of the data fields are empty.
-        if (len(self.regUname) != 0) and (len(self.regPword) != 0) and (len(self.regConPword) != 0) and (len(self.regPHint) != 0):
+        elif (len(self.regUname) != 0) and (len(self.regPword) != 0) and (len(self.regConPword) != 0) and (len(self.regPHint) != 0):
 
             # Checks that the password fields match.
             if (self.regPword == self.regConPword):
@@ -285,9 +295,29 @@ class regWindow(QDialog):
                         # Opens the login page.
                         self.toLogin()
 
+                    # Checks if the password does not contain a lower case letter.
+                    elif len(self.lower) == 0:
+                        # Displays an error message.
+                        QMessageBox.critical(self, "Error", "Password Must Contain at Least 1 Lower Case Letter!")
+
+                    # Checks if the password does not contain an upper case letter.
+                    elif len(self.upper) == 0:
+                        # Displays an error message.
+                        QMessageBox.critical(self, "Error", "Password Must Contain at Least 1 Upper Case Letter!")
+
+                    # Checks if the password does not contain a number.
+                    elif len(self.num) == 0:
+                        # Displays an error message.
+                        QMessageBox.critical(self, "Error", "Password Must Contain at Least 1 Number!")
+
+                    # Checks if the password does not contain a special character.
+                    elif len(self.specialChar) == 0:
+                        # Displays an error message.
+                        QMessageBox.critical(self, "Error", "Password Must Contain at Least 1 Special Character!")
+
                     else:
                         # Displays an error message.
-                        QMessageBox.critical(self, "Error", "Password Must Contain at Least 1 Upper, 1 Lower Case Letter, 1 Number and 1 Special Character.")
+                        QMessageBox.critical(self, "Error", "Password Must Contain at Least 1 Upper, 1 Lower Case Letter, 1 Number and 1 Special Character!")
 
                 # If any were retrieved.
                 else:
@@ -317,16 +347,6 @@ class regWindow(QDialog):
         elif (len(self.regPHint)) == 0:
             # Displays an error message.
             QMessageBox.critical(self, "Error", "Please Enter a Forgot Password Hint!")
-
-        # Checks if the username is too long.
-        elif (len(self.regUname) > 20):
-            # Displays an error message.
-            QMessageBox.critical(self, "Error", "Username is too long!")
-
-        # Checks the password is not too long.
-        elif (len(self.regPword) > 20) or (len(self.regConPword) > 20):
-            # Displays an error message.
-            QMessageBox.critical(self, "Error", "Password is too long!")
 
     # Defines the function to open the home page.
     def toHome(self):
