@@ -20,6 +20,12 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as figureCanvas,
 from matplotlib.figure import Figure
 from matplotlib import use
 
+# Importing numpy.
+from numpy import polyfit, array
+
+# Sets the matplotlib style to be used.
+use("QtAgg")
+
 # Creates the database connection string.
 conStr = (r"DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};"
           r"DBQ=..\programFiles.accdb;")
@@ -402,6 +408,9 @@ class mainPage(QMainWindow):
         self.mainSciDrpdwn = False
         self.mainAccDrpdwn = False
 
+        # Sets up the data table button.
+        self.ui.btnMainTable.clicked.connect(self.toDataTable)
+
     # Defines the function that takes the user to the login page.
     def toLogin(self):
         # Hides the main menu.
@@ -475,6 +484,19 @@ class mainPage(QMainWindow):
         # Calls the account dropdown function to hide the account dropdown.
         self.accountDropdown()
 
+    # Defines the function to take the user to the data table page.
+    def toDataTable(self):
+        # Hides the main window.
+        self.hide()
+        # Instantiates a new QDialog object.
+        dialog = QDialog()
+        # Instantiates a dataWindow object.
+        data = dataWindow()
+        # Shows the dataWindow object.
+        data.show()
+        # Executes the dataWindow object.
+        data.exec()
+
 # Defines the data window class.
 class dataWindow(QDialog):
     # Defines the constructor method of the data window class.
@@ -491,25 +513,100 @@ class dataWindow(QDialog):
             style = f.read()
             self.setStyleSheet(style)
 
+        ### Data Graph Viewer Setup.
+
+        # Sets the current widget to be the graph viewer.
+        self.ui.sWDataWindow.setCurrentIndex(2)
+
         # Creates the dataCanvas.
-        self.dataCanvas = graphCanvas(self, width=5, height=5, dpi=100)
+        self.ui.dataCanvas = graphCanvas(self, width=5, height=5, dpi=100)
 
         # Adds the canvas to the window.
-        self.ui.lytDataWindowCanvas.addWidget(self.dataCanvas)
-
-        # Plots some data on the axes.
-        self.dataCanvas.axes.plot([5,4,3,2,1,0], [0,1,2,3,4,5])
-
-        # Sets the matplotlib style to be used.
-        use("qtagg")
+        self.ui.lytDataWindowCanvas.addWidget(self.ui.dataCanvas)
 
         # Adds the toolbar to the graph.
-        self.ui.navBarDataWindow = navBar(self.dataCanvas, self)
+        self.ui.navBarDataWindow = navBar(self.ui.dataCanvas, self)
         self.ui.lytDataWindowBar.addWidget(self.ui.navBarDataWindow)
 
+        # Adds the stylesheet to the navigation bar.
         with open("../Stylesheets/navBarStylesheet.css", "r") as f:
             style = f.read()
             self.ui.frameDataWindowBar.setStyleSheet(style)
+
+        ### Data Table Setup.
+
+        # Sets up the home buttons.
+        self.ui.btnTDataHome.clicked.connect(self.toHome)
+        self.ui.btnDataWindowHome.clicked.connect(self.toHome)
+
+        # Sets up the add row button.
+        self.ui.btnTDataRow.clicked.connect(self.addRow)
+
+        # Sets up the graph data button.
+        self.ui.btnTDataGraph.clicked.connect(self.graphData)
+
+    # Defines the function to take the user to the home page
+    def toHome(self):
+        # Closes the window.
+        self.close()
+        # Opens the main window.
+        mainPage.show()
+
+    # Defines the function to add a new row to the table.
+    def addRow(self):
+        # Stores the number of rows in the table temporarily.
+        self.index = self.ui.tblTDataPoints.rowCount()
+        # Inserts a new row at the next available index, using the number of rows.
+        self.ui.tblTDataPoints.insertRow((self.index))
+
+    # Defines the graph data function.
+    def graphData(self):
+        # Defines a temporary counter variable to keep track of which item is being checked.
+        self.i = 0
+        # Defines the lists of x and y values.
+        self.dataXValues = []
+        self.dataYValues = []
+        # Checks if the index is within the number of rows.
+        while (self.i < self.ui.tblTDataPoints.rowCount()):
+            # Temporarily stores the current x and y values.
+            self.tempX = self.ui.tblTDataPoints.item(self.i, 0).text()
+            self.tempY = self.ui.tblTDataPoints.item(self.i, 1).text()
+
+            # Checks if the x value entered is a number.
+            try:
+                self.tempX = float(self.tempX)
+            # Outputs an error message if not.
+            except ValueError:
+                QMessageBox.critical(self, "Error", "X-Values must be numbers!")
+                return ValueError
+            else:
+                # Adds the value to the x value list.
+                self.dataXValues.append(self.tempX)
+
+            # Checks if the y value entered is a number.
+            try:
+                self.tempY = float(self.tempY)
+            # Outputs an error message if not.
+            except ValueError:
+                QMessageBox.critical(self, "Error", "Y-Values must be numbers!")
+                return ValueError
+            else:
+                # Adds the value to the y value list.
+                self.dataYValues.append(self.tempY)
+            # Increments the counter variable.
+            self.i += 1
+
+        # Converts the x and y value lists into numpy arrays.
+        self.dataXValues = array(self.dataXValues)
+        self.dataYValues = array(self.dataYValues)
+        # Calculates the gradient and y intercept of the line of best fit for the data.
+        self.gradient, self.yint = polyfit(self.dataXValues, self.dataYValues, 1)
+        # Plots the data onto the data graph viewer's canvas.
+        self.ui.dataCanvas.axes.scatter(self.dataXValues, self.dataYValues, marker="o")
+        # Plots the line of best fit onto the graph viewer's canvas.
+        self.ui.dataCanvas.axes.plot(self.dataXValues, (self.gradient * self.dataXValues) + self.yint)
+        # Changes the window to display the graph.
+        self.ui.sWDataWindow.setCurrentIndex(1)
 
 # Defines the graph canvas class.
 class graphCanvas(figureCanvas):
@@ -530,11 +627,6 @@ if __name__ == "__main__":
     mainPage = mainPage()
     # Shows the login window.
     mainPage.show()
-
-    dialog = QDialog()
-    data = dataWindow()
-    data.show()
-
     # Executes the application.
     app.exec()
 
