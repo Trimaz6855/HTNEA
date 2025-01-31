@@ -5,7 +5,7 @@ from mainWindow import Ui_mainPage
 from dataWindow import Ui_dataWindow
 
 # Importing PyQt for window functionality.
-from PyQt6.QtWidgets import QMainWindow, QApplication, QLineEdit, QMessageBox, QDialog
+from PyQt6.QtWidgets import QMainWindow, QApplication, QLineEdit, QMessageBox, QDialog, QFileDialog, QTableWidgetItem
 from PyQt6.QtGui import QIcon, QWindow
 from PyQt6.QtCore import Qt
 
@@ -554,6 +554,9 @@ class dataWindow(QDialog):
         # Sets up the graph data button.
         self.ui.btnTDataGraph.clicked.connect(self.graphData)
 
+        # Sets up the import CSV button.
+        self.ui.btnTDataCSV.clicked.connect(self.importCSV)
+
     # Defines the function to take the user to the home page
     def toHome(self):
         # Closes the window.
@@ -630,6 +633,66 @@ class dataWindow(QDialog):
             self.ui.sWDataWindow.setCurrentIndex(1)
             # Sets the window title.
             self.setWindowTitle("Data Graph Viewer")
+
+    # Defines the function to import a csv file.
+    def importCSV(self):
+        # Prompts the user to select a csv file from their computer.
+        self.dataCSVFile = QFileDialog.getOpenFileUrl(self, "Select CSV File", filter="CSV files (*.csv)")
+        # Checks that the user has selected a csv file.
+        if self.dataCSVFile:
+            # Extracts the csv file path from the QUrl item returned by the QFileDialog and converts it to a local file path.
+            self.dataCSVFile = self.dataCSVFile[0].toLocalFile()
+            # Opens the csv file to read the data from it.
+            with (open(self.dataCSVFile, "r") as self.f):
+                # Defines a temporary line counter variable
+                self.lineCount = 1
+                # Loops through every line in the file
+                for self.line in self.f:
+                   # Removes any whitespace from the line and tries to split it into an x and a y value.
+                    try:
+                        self.tempX, self.tempY = self.line.strip().split(",")
+                    # Outputs an error message if there are not exactly 2 values per line.
+                    except ValueError:
+                        QMessageBox.critical(self, "Error", "CSV file is not in the correct format, there must be exactly 2 values per line!")
+                        # Used to exit out of the function.
+                        return ValueError
+                    else:
+                        if self.lineCount == 1:
+                            # Checks if the values read from the file are strings.
+                            if type(self.tempX) == str and type(self.tempY) == str:
+
+                                # Sets the table headers to be the input strings.
+                                self.ui.tblTDataPoints.setHorizontalHeaderLabels([self.tempX, self.tempY])
+                        else:
+                            # Checks if the values are floats.
+                            try:
+                                self.tempX = float(self.tempX)
+                                self.tempY = float(self.tempY)
+                            # If they are not floats, an error message is returned.
+                            except ValueError:
+                                QMessageBox.critical(self, "Error", "Please enter numerical co-ordinate values!")
+                                # Used to exit out of the function.
+                                return ValueError
+                            else:
+                                # Adds a new row to the table if the 1 default row has been filled.
+                                if self.lineCount > 2:
+                                    self.addRow()
+
+                                print(self.tempX, self.tempY)
+
+                                self.tempXItem = QTableWidgetItem(str(self.tempX))
+                                self.tempYItem = QTableWidgetItem(str(self.tempY))
+
+                                # Sets the items in the new row to be the x and y values from the csv file.
+                                self.ui.tblTDataPoints.setItem((self.lineCount - 1), 0, self.tempXItem)
+                                self.ui.tblTDataPoints.setItem((self.lineCount - 1), 1, self.tempYItem)
+
+                                print(self.tempXItem.text(), self.tempYItem.text())
+                                print(self.ui.tblTDataPoints.item((self.lineCount-1), 0))
+
+                    self.lineCount += 1
+        else:
+            return FileNotFoundError
 
 # Defines the graph canvas class.
 class graphCanvas(figureCanvas):
