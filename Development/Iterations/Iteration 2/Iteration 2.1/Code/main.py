@@ -43,6 +43,8 @@ class loginWindow(QDialog):#
         self.ui = Ui_loginWindow()
         # Sets up the ui.
         self.ui.setupUi(self)
+        # Sets the window title.
+        self.setWindowTitle("Login Page")
 
         # Adds the external stylesheet.
         with open("../Stylesheets/mainStylesheet.css", "r") as f:
@@ -191,6 +193,9 @@ class regWindow(QDialog):
         self.ui = Ui_regWindow()
         # Sets up the ui.
         self.ui.setupUi(self)
+        #Sets the window title.
+        self.setWindowTitle("Registration Page")
+
         # Sets the stylesheet of the window.
         with open("../Stylesheets/mainStylesheet.css", "r") as f:
             style = f.read()
@@ -380,6 +385,8 @@ class mainPage(QMainWindow):
         self.ui = Ui_mainPage()
         # Sets up the ui.
         self.ui.setupUi(self)
+        # Sets the window title.
+        self.setWindowTitle("Home Page")
 
         # Sets up the login button.
         self.ui.btnMainLogin.clicked.connect(self.toLogin)
@@ -507,6 +514,8 @@ class dataWindow(QDialog):
         self.ui = Ui_dataWindow()
         # Sets up the ui.
         self.ui.setupUi(self)
+        # Sets the window title.
+        self.setWindowTitle("Data Table")
 
         # Applies the stylesheet to the window.
         with open("../Stylesheets/mainStylesheet.css", "r") as f:
@@ -566,47 +575,61 @@ class dataWindow(QDialog):
         # Defines the lists of x and y values.
         self.dataXValues = []
         self.dataYValues = []
-        # Checks if the index is within the number of rows.
-        while (self.i < self.ui.tblTDataPoints.rowCount()):
-            # Temporarily stores the current x and y values.
-            self.tempX = self.ui.tblTDataPoints.item(self.i, 0).text()
-            self.tempY = self.ui.tblTDataPoints.item(self.i, 1).text()
+        # Checks there is more than 1 row.
+        if self.ui.tblTDataPoints.rowCount() == 1:
+            # Outputs an error message.
+            QMessageBox.critical(self, "Error", "Please enter more than 1 row")
+            return ValueError
+        else:
+            # Checks if the index is within the number of rows.
+            while (self.i < self.ui.tblTDataPoints.rowCount()):
+                # Attempts to temporarily store the current x and y values.
+                try:
+                    self.tempX = self.ui.tblTDataPoints.item(self.i, 0).text()
+                    self.tempY = self.ui.tblTDataPoints.item(self.i, 1).text()
+                # Handles an error if the fields are empty.
+                except AttributeError:
+                    # Outputs an error message.
+                    QMessageBox.critical(self, "Error", "Please fill every data field!")
+                    return AttributeError
+                else:
+                    # Checks if the x value entered is a number.
+                    try:
+                        self.tempX = float(self.tempX)
+                    # Outputs an error message if not.
+                    except ValueError:
+                        QMessageBox.critical(self, "Error", "X-Values must be numbers!")
+                        return ValueError
+                    else:
+                        # Adds the value to the x value list.
+                        self.dataXValues.append(self.tempX)
 
-            # Checks if the x value entered is a number.
-            try:
-                self.tempX = float(self.tempX)
-            # Outputs an error message if not.
-            except ValueError:
-                QMessageBox.critical(self, "Error", "X-Values must be numbers!")
-                return ValueError
-            else:
-                # Adds the value to the x value list.
-                self.dataXValues.append(self.tempX)
+                    # Checks if the y value entered is a number.
+                    try:
+                        self.tempY = float(self.tempY)
+                    # Outputs an error message if not.
+                    except ValueError:
+                        QMessageBox.critical(self, "Error", "Y-Values must be numbers!")
+                        return ValueError
+                    else:
+                        # Adds the value to the y value list.
+                        self.dataYValues.append(self.tempY)
+                    # Increments the counter variable.
+                    self.i += 1
 
-            # Checks if the y value entered is a number.
-            try:
-                self.tempY = float(self.tempY)
-            # Outputs an error message if not.
-            except ValueError:
-                QMessageBox.critical(self, "Error", "Y-Values must be numbers!")
-                return ValueError
-            else:
-                # Adds the value to the y value list.
-                self.dataYValues.append(self.tempY)
-            # Increments the counter variable.
-            self.i += 1
-
-        # Converts the x and y value lists into numpy arrays.
-        self.dataXValues = array(self.dataXValues)
-        self.dataYValues = array(self.dataYValues)
-        # Calculates the gradient and y intercept of the line of best fit for the data.
-        self.gradient, self.yint = polyfit(self.dataXValues, self.dataYValues, 1)
-        # Plots the data onto the data graph viewer's canvas.
-        self.ui.dataCanvas.axes.scatter(self.dataXValues, self.dataYValues, marker="o")
-        # Plots the line of best fit onto the graph viewer's canvas.
-        self.ui.dataCanvas.axes.plot(self.dataXValues, (self.gradient * self.dataXValues) + self.yint)
-        # Changes the window to display the graph.
-        self.ui.sWDataWindow.setCurrentIndex(1)
+            # Converts the x and y value lists into numpy arrays.
+            self.dataXValues = array(self.dataXValues)
+            self.dataYValues = array(self.dataYValues)
+            # Calculates the gradient and y intercept of the line of best fit for the data.
+            self.gradient, self.yint = polyfit(self.dataXValues, self.dataYValues, 1)
+            # Plots the data onto the data graph viewer's canvas.
+            self.ui.dataCanvas.axes.scatter(self.dataXValues, self.dataYValues, marker="o")
+            # Plots the line of best fit onto the graph viewer's canvas.
+            self.ui.dataCanvas.axes.plot(self.dataXValues, (self.gradient * self.dataXValues) + self.yint)
+            # Changes the window to display the graph.
+            self.ui.sWDataWindow.setCurrentIndex(1)
+            # Sets the window title.
+            self.setWindowTitle("Data Graph Viewer")
 
 # Defines the graph canvas class.
 class graphCanvas(figureCanvas):
