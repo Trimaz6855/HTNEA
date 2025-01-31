@@ -578,7 +578,7 @@ class dataWindow(QDialog):
         # Checks there is more than 1 row.
         if self.ui.tblTDataPoints.rowCount() == 1:
             # Outputs an error message.
-            QMessageBox.critical(self, "Error", "Please enter more than 1 row")
+            QMessageBox.critical(self, "Error", "Please enter more co-ordinate values.")
             return ValueError
         else:
             # Checks if the index is within the number of rows.
@@ -598,7 +598,7 @@ class dataWindow(QDialog):
                         self.tempX = float(self.tempX)
                     # Outputs an error message if not.
                     except ValueError:
-                        QMessageBox.critical(self, "Error", "X-Values must be numbers!")
+                        QMessageBox.critical(self, "Error", "Please enter numerical co-ordinate values!")
                         return ValueError
                     else:
                         # Adds the value to the x value list.
@@ -609,7 +609,7 @@ class dataWindow(QDialog):
                         self.tempY = float(self.tempY)
                     # Outputs an error message if not.
                     except ValueError:
-                        QMessageBox.critical(self, "Error", "Y-Values must be numbers!")
+                        QMessageBox.critical(self, "Error", "Please enter numerical co-ordinate values!")
                         return ValueError
                     else:
                         # Adds the value to the y value list.
