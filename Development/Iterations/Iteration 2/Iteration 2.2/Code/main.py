@@ -657,12 +657,26 @@ class dataWindow(QDialog):
                         # Used to exit out of the function.
                         return ValueError
                     else:
+                        # Checks the values on the first line (should be header labels).
                         if self.lineCount == 1:
                             # Checks if the values read from the file are strings.
-                            if type(self.tempX) == str and type(self.tempY) == str:
+                            try:
+                                # Checks that the values are not numerical as they must be the header labels.
+                                self.tempX = float(self.tempX)
+                                self.tempY = float(self.tempY)
+                            # Handles the error raised if the values are not numerical.
+                            except ValueError:
+                                if type(self.tempX) == str and type(self.tempY) == str:
+                                    # Sets the table headers to be the input strings.
+                                    self.ui.tblTDataPoints.setHorizontalHeaderLabels([self.tempX, self.tempY])
+                                # Returns an error if they are not strings.
+                                else:
+                                    QMessageBox.critical(self, "Error", "Please enter header labels on the first line!")
+                            else:
+                                # Outputs an error message.
+                                QMessageBox.critical(self, "Error", "Please enter valid header labels on the first line!")
+                                return ValueError
 
-                                # Sets the table headers to be the input strings.
-                                self.ui.tblTDataPoints.setHorizontalHeaderLabels([self.tempX, self.tempY])
                         else:
                             # Checks if the values are floats.
                             try:
@@ -678,20 +692,15 @@ class dataWindow(QDialog):
                                 if self.lineCount > 2:
                                     self.addRow()
 
-                                print(self.tempX, self.tempY)
-
-                                self.tempXItem = QTableWidgetItem(str(self.tempX))
-                                self.tempYItem = QTableWidgetItem(str(self.tempY))
-
                                 # Sets the items in the new row to be the x and y values from the csv file.
-                                self.ui.tblTDataPoints.setItem((self.lineCount - 1), 0, self.tempXItem)
-                                self.ui.tblTDataPoints.setItem((self.lineCount - 1), 1, self.tempYItem)
+                                self.ui.tblTDataPoints.setItem((self.lineCount - 2), 0, QTableWidgetItem(str(self.tempX)))
+                                self.ui.tblTDataPoints.setItem((self.lineCount - 2), 1, QTableWidgetItem(str(self.tempY)))
 
-                                print(self.tempXItem.text(), self.tempYItem.text())
-                                print(self.ui.tblTDataPoints.item((self.lineCount-1), 0))
-
+                    # Increments the line counter variable.
                     self.lineCount += 1
         else:
+            # Returns an error if the file was not selected.
+            QMessageBox.critical(self, "Error", "Please select a valid CSV file!")
             return FileNotFoundError
 
 # Defines the graph canvas class.
