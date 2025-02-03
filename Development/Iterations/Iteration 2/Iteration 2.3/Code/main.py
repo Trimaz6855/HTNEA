@@ -2,20 +2,36 @@
 from login import Ui_loginWindow
 from registration import Ui_regWindow
 from mainWindow import Ui_mainPage
+from dataWindow import Ui_dataWindow
 
-# Importing python libraries.
-from PyQt6.QtWidgets import QMainWindow, QApplication, QLineEdit, QMessageBox, QDialog
+# Importing PyQt for window functionality.
+from PyQt6.QtWidgets import QMainWindow, QApplication, QLineEdit, QMessageBox, QDialog, QFileDialog, QTableWidgetItem
 from PyQt6.QtGui import QIcon, QWindow
 from PyQt6.QtCore import Qt
+
+# Importing pyodbc for database connection.
 import pyodbc
+
+# Importing regular expressions.
 import re
+
+# Importing matplotlib for graphing.
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as figureCanvas,  NavigationToolbar2QT as navBar
+from matplotlib.figure import Figure
+from matplotlib import use
+
+# Importing numpy.
+from numpy import polyfit, array
+
+# Sets the matplotlib style to be used.
+use("QtAgg")
 
 # Creates the database connection string.
 conStr = (r"DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};"
           r"DBQ=..\programFiles.accdb;")
 
 # Stores the user's account.
-account = []
+currentAccount = []
 
 # Creating the login page class.
 class loginWindow(QDialog):#
@@ -27,6 +43,8 @@ class loginWindow(QDialog):#
         self.ui = Ui_loginWindow()
         # Sets up the ui.
         self.ui.setupUi(self)
+        # Sets the window title.
+        self.setWindowTitle("Login Page")
 
         # Adds the external stylesheet.
         with open("../Stylesheets/mainStylesheet.css", "r") as f:
@@ -70,28 +88,28 @@ class loginWindow(QDialog):#
     # Defines the login function.
     def login(self):
         # Temporarily stores the username and password entered by the user.
-        self.loginUname = self.ui.txtLoginUname.text().strip()
-        self.loginPWord = self.ui.txtLoginPWord.text().strip()
+        loginUname = self.ui.txtLoginUname.text().strip()
+        loginPWord = self.ui.txtLoginPWord.text().strip()
         # Checks the input meets the required validation rules.
-        if (0 < len(self.loginUname) <= 20) and (0 < len(self.loginPWord) <= 20):
+        if (0 < len(loginUname) <= 20) and (0 < len(loginPWord) <= 20):
             # Opens a connection to the database.
-            self.conn = pyodbc.connect(conStr)
+            conn = pyodbc.connect(conStr)
             # Creates a cursor to navigate the database.
-            self.cursor = self.conn.cursor()
+            cursor = conn.cursor()
             # Searches the database for accounts with the username entered.
-            self.cursor.execute(f"SELECT * FROM Accounts WHERE uname = '{self.loginUname}'")
+            cursor.execute(f"SELECT * FROM Accounts WHERE uname = '{loginUname}'")
             # Stores the retrieved account.
-            self.account = self.cursor.fetchone()
+            account = cursor.fetchone()
             # Closes the database connection.
-            self.conn.close()
+            conn.close()
             # Checks if an account exists with that username.
-            if self.account:
+            if account:
                 # Checks that the passwords match.
-                if self.account[2] == self.loginPWord:
+                if account[2] == loginPWord:
                     # Displays a welcome message to the user.
-                    QMessageBox.information(self, "Login Success!", f"Welcome, {self.loginUname}")
+                    QMessageBox.information(self, "Login Success!", f"Welcome, {loginUname}")
                     # Stores the users account.
-                    account.append(self.account)
+                    account.append(account)
                     # Sends the user to the home page.
                     self.toHome()
                 else:
@@ -101,44 +119,44 @@ class loginWindow(QDialog):#
                 # Displays an error message to the user.
                 QMessageBox.critical(self, "Error", "Invalid Username!")
         # Checks the username is not empty.
-        elif len(self.loginUname) == 0:
+        elif len(loginUname) == 0:
             # Displays an error message.
             QMessageBox.critical(self, "Error", "Username is empty!")
-        elif len(self.loginUname) > 20:
+        elif len(loginUname) > 20:
             # Displays an error message.
             QMessageBox.critical(self, "Error", "Username is too long!")
-        elif len(self.loginPWord) == 0:
+        elif len(loginPWord) == 0:
             # Displays an error message.
             QMessageBox.critical(self, "Error", "Password is empty!")
-        elif len(self.loginPWord) > 20:
+        elif len(loginPWord) > 20:
             # Displays an error message.
             QMessageBox.critical(self, "Error", "Password is too long!")
 
     # Defines the forgot password function.
     def forgotPassword(self):
         # Temporarily stores the entered username.
-        self.loginUname = self.ui.txtLoginUname.text().strip()
+        loginUname = self.ui.txtLoginUname.text().strip()
         # Checks the username box is not empty.
-        if len(self.loginUname) != 0:
+        if len(loginUname) != 0:
             # Opens a connection to the database.
-            self.conn = pyodbc.connect(conStr)
+            conn = pyodbc.connect(conStr)
             # Creates a cursor to navigate through the database.
-            self.cursor = self.conn.cursor()
+            cursor = conn.cursor()
             # Checks the database for an account with a username matching the one entered by the user and returns the users forgot password hint.
-            self.cursor.execute(f"SELECT pwordHint FROM Accounts WHERE uname = '{self.loginUname}'")
+            cursor.execute(f"SELECT pwordHint FROM Accounts WHERE uname = '{loginUname}'")
             # Stores the forgot password hint.
-            self.loginPwordHint = self.cursor.fetchone()
+            loginPwordHint = cursor.fetchone()
             # Closes the database connection.
-            self.conn.close()
+            conn.close()
             # Displays the users forgot password hint to them if one was found.
-            if self.loginPwordHint:
+            if loginPwordHint:
                 # Displays the information popup with their hint.
-                QMessageBox.information(self, "Forgot Password Hint", f"Your Forgot Password Hint is: {self.loginPwordHint[0]}")
+                QMessageBox.information(self, "Forgot Password Hint", f"Your Forgot Password Hint is: {loginPwordHint[0]}")
             else:
                 # Displays an error popup.
                 QMessageBox.critical(self, "Error", "Invalid Username!")
         # Checks the username entered is not invalid.
-        elif len(self.loginUname) > 20:
+        elif len(loginUname) > 20:
             # Displays an error popup.
             QMessageBox.critical(self, "Error", "Invalid Username!")
         else:
@@ -175,6 +193,9 @@ class regWindow(QDialog):
         self.ui = Ui_regWindow()
         # Sets up the ui.
         self.ui.setupUi(self)
+        #Sets the window title.
+        self.setWindowTitle("Registration Page")
+
         # Sets the stylesheet of the window.
         with open("../Stylesheets/mainStylesheet.css", "r") as f:
             style = f.read()
@@ -238,55 +259,55 @@ class regWindow(QDialog):
     # Defines the register function.
     def register(self):
         # Temporarily stores the data entered by the user.
-        self.regUname = self.ui.txtRegUname.text().strip()
-        self.regPword = self.ui.txtRegPword.text().strip()
-        self.regConPword = self.ui.txtRegConPword.text().strip()
-        self.regPHint = self.ui.txtRegPHint.text()
+        regUname = self.ui.txtRegUname.text().strip()
+        regPword = self.ui.txtRegPword.text().strip()
+        regConPword = self.ui.txtRegConPword.text().strip()
+        regPHint = self.ui.txtRegPHint.text()
 
         # Checks the password is not too long.
-        if (len(self.regPword) > 20) or (len(self.regConPword) > 20):
+        if (len(regPword) > 20) or (len(regConPword) > 20):
             # Displays an error message.
             QMessageBox.critical(self, "Error", "Password is too long!")
 
         # Checks if the username is too long.
-        elif (len(self.regUname) > 20):
+        elif (len(regUname) > 20):
             # Displays an error message.
             QMessageBox.critical(self, "Error", "Username is too long!")
 
         # Checks that none of the data fields are empty.
-        elif (len(self.regUname) != 0) and (len(self.regPword) != 0) and (len(self.regConPword) != 0) and (len(self.regPHint) != 0):
+        elif (len(regUname) != 0) and (len(regPword) != 0) and (len(regConPword) != 0) and (len(regPHint) != 0):
 
             # Checks that the password fields match.
-            if (self.regPword == self.regConPword):
+            if (regPword == regConPword):
                 # Opens a connection with the database.
-                self.conn = pyodbc.connect(conStr)
+                conn = pyodbc.connect(conStr)
                 # Creates a cursor to navigate the database.
-                self.cursor = self.conn.cursor()
+                cursor = conn.cursor()
                 # Attempts to find an account with the username the user has entered.
-                self.cursor.execute(f"SELECT * FROM Accounts WHERE uname = '{self.regUname}'")
+                cursor.execute(f"SELECT * FROM Accounts WHERE uname = '{regUname}'")
                 # Attempts to store any accounts retrieved.
-                self.results = self.cursor.fetchone()
+                results = cursor.fetchone()
                 # Checks that there were no accounts retrieved.
 
-                if not self.results:
+                if not results:
                     # Searches the password to check it meets the required criteria.
                     # Searches for any lower case letters and temporarily stores them.
-                    self.lower = re.findall(r"[a-z]", self.regPword)
+                    lower = re.findall(r"[a-z]", regPword)
                     # Searches for any upper case letters and temporarily stores them.
-                    self.upper = re.findall(r"[A-Z]", self.regPword)
+                    upper = re.findall(r"[A-Z]", regPword)
                     # Searches for any numbers and temporarily stores them.
-                    self.num = re.findall(r"[0-9]", self.regPword)
+                    num = re.findall(r"[0-9]", regPword)
                     # Searches for any special characters and temporarily stores them.
-                    self.specialChar = re.findall(r"[\!\"\£\$\%\^\&\*\(\)\+\=\¬\`\|\:\;\@\#\~\,\.\<\>\/\?\{\}\[\]\'-]", self.regPword)
+                    specialChar = re.findall(r"[\!\"\£\$\%\^\&\*\(\)\+\=\¬\`\|\:\;\@\#\~\,\.\<\>\/\?\{\}\[\]\'-]", regPword)
 
                     # Checks that the password contains at least 1 of each of the required characters.
-                    if (len(self.lower) > 0) and (len(self.upper) > 0) and (len(self.num) > 0) and (len(self.specialChar) > 0):
+                    if (len(lower) > 0) and (len(upper) > 0) and (len(num) > 0) and (len(specialChar) > 0):
                         # Inserts a new account record into the database.
-                        self.cursor.execute(f"INSERT INTO Accounts (uname, pword, pwordHint) VALUES ('{self.regUname}', '{self.regPword}', '{self.regPHint}')")
+                        cursor.execute(f"INSERT INTO Accounts (uname, pword, pwordHint) VALUES ('{regUname}', '{regPword}', '{regPHint}')")
                         # Commits the changes to the database.
-                        self.conn.commit()
+                        conn.commit()
                         # Closes the database connection.
-                        self.conn.close()
+                        conn.close()
                         # Displays a success message.
                         QMessageBox.information(self, "Account Creation Success", "Account Created Successfully!")
                         # Closes the registration page.
@@ -295,22 +316,22 @@ class regWindow(QDialog):
                         self.toLogin()
 
                     # Checks if the password does not contain a lower case letter.
-                    elif len(self.lower) == 0:
+                    elif len(lower) == 0:
                         # Displays an error message.
                         QMessageBox.critical(self, "Error", "Password Must Contain at Least 1 Lower Case Letter!")
 
                     # Checks if the password does not contain an upper case letter.
-                    elif len(self.upper) == 0:
+                    elif len(upper) == 0:
                         # Displays an error message.
                         QMessageBox.critical(self, "Error", "Password Must Contain at Least 1 Upper Case Letter!")
 
                     # Checks if the password does not contain a number.
-                    elif len(self.num) == 0:
+                    elif len(num) == 0:
                         # Displays an error message.
                         QMessageBox.critical(self, "Error", "Password Must Contain at Least 1 Number!")
 
                     # Checks if the password does not contain a special character.
-                    elif len(self.specialChar) == 0:
+                    elif len(specialChar) == 0:
                         # Displays an error message.
                         QMessageBox.critical(self, "Error", "Password Must Contain at Least 1 Special Character!")
 
@@ -328,22 +349,22 @@ class regWindow(QDialog):
                 QMessageBox.critical(self, "Error", "Passwords do not match!")
 
         # Checks if the username is empty.
-        elif (len(self.regUname) == 0):
+        elif (len(regUname) == 0):
             # Displays an error message.
             QMessageBox.critical(self, "Error", "Please Enter a Username!")
 
         # Checks if the password is empty.
-        elif (len(self.regPword) == 0):
+        elif (len(regPword) == 0):
             # Displays an error message.
             QMessageBox.critical(self, "Error", "Please Enter a Password!")
 
         # Checks if the confirm password box is empty.
-        elif (len(self.regConPword)) == 0:
+        elif (len(regConPword)) == 0:
             # Displays an error message.
             QMessageBox.critical(self, "Error", "Please Confirm your Password!")
 
         # Checks if the forgot password hint box is empty.
-        elif (len(self.regPHint)) == 0:
+        elif (len(regPHint)) == 0:
             # Displays an error message.
             QMessageBox.critical(self, "Error", "Please Enter a Forgot Password Hint!")
 
@@ -364,6 +385,8 @@ class mainPage(QMainWindow):
         self.ui = Ui_mainPage()
         # Sets up the ui.
         self.ui.setupUi(self)
+        # Sets the window title.
+        self.setWindowTitle("Home Page")
 
         # Sets up the login button.
         self.ui.btnMainLogin.clicked.connect(self.toLogin)
@@ -392,6 +415,9 @@ class mainPage(QMainWindow):
         self.mainSciDrpdwn = False
         self.mainAccDrpdwn = False
 
+        # Sets up the data table button.
+        self.ui.btnMainTable.clicked.connect(self.toDataTable)
+
     # Defines the function that takes the user to the login page.
     def toLogin(self):
         # Hides the main menu.
@@ -413,7 +439,7 @@ class mainPage(QMainWindow):
     # Defines a function to check if the user is logged in.
     def accountCheck(self):
         # Checks if the user is logged in.
-        if account == []:
+        if currentAccount == []:
             # Makes the login button the visible button.
             self.ui.btnMainAccDrp.setHidden(True)
             self.ui.btnMainLogin.setHidden(False)
@@ -423,7 +449,7 @@ class mainPage(QMainWindow):
             # Makes the account text and dropdown the only visible parts.
             self.ui.btnMainLogin.setHidden(True)
             self.ui.btnMainAccDrp.setHidden(False)
-            self.ui.btnMainAccDrp.setText(f"Hello, {account[0][1]} v")
+            self.ui.btnMainAccDrp.setText(f"Hello, {currentAccount[0][1]} v")
             self.mainLoggedIn = True
 
     # Defines the account dropdown function.
@@ -433,7 +459,7 @@ class mainPage(QMainWindow):
             # Makes the menu visible.
             self.mainAccDrpdwn = True
             self.ui.frameAcc.setVisible(True)
-            self.ui.btnMainAccDrp.setText(f"Hello, {account[0][1]} ^")
+            self.ui.btnMainAccDrp.setText(f"Hello, {currentAccount[0][1]} ^")
             # Checks if the menu is not visible.
         elif self.mainAccDrpdwn == True:
             # Hides the menu.
@@ -456,14 +482,241 @@ class mainPage(QMainWindow):
             self.ui.frameSci.setVisible(False)
             self.ui.btnMainSciDrp.setText("Scientific Functions v")
 
-    #Defines the logout function.
+    # Defines the logout function.
     def logout(self):
         # Clears the stored account.
-        account.clear()
+        currentAccount.clear()
         # Calls the account check function to alter the main page.
         self.accountCheck()
         # Calls the account dropdown function to hide the account dropdown.
         self.accountDropdown()
+
+    # Defines the function to take the user to the data table page.
+    def toDataTable(self):
+        # Hides the main window.
+        self.hide()
+        # Instantiates a new QDialog object.
+        dialog = QDialog()
+        # Instantiates a dataWindow object.
+        data = dataWindow()
+        # Shows the dataWindow object.
+        data.show()
+        # Executes the dataWindow object.
+        data.exec()
+
+# Defines the data window class.
+class dataWindow(QDialog):
+    # Defines the constructor method of the data window class.
+    def __init__(self):
+        # Accesses the parent class' constructor method.
+        super().__init__()
+        # Sets the windows ui to be the dataWindow class' ui.
+        self.ui = Ui_dataWindow()
+        # Sets up the ui.
+        self.ui.setupUi(self)
+        # Sets the window title.
+        self.setWindowTitle("Data Table")
+
+        # Applies the stylesheet to the window.
+        with open("../Stylesheets/mainStylesheet.css", "r") as f:
+            style = f.read()
+            self.setStyleSheet(style)
+
+        ### Data Graph Viewer Setup.
+
+        # Sets the current widget to be the graph viewer.
+        self.ui.sWDataWindow.setCurrentIndex(2)
+
+        # Creates the dataCanvas.
+        self.ui.dataCanvas = graphCanvas(self, width=5, height=5, dpi=100)
+
+        # Adds the canvas to the window.
+        self.ui.lytDataWindowCanvas.addWidget(self.ui.dataCanvas)
+
+        # Adds the toolbar to the graph.
+        self.ui.navBarDataWindow = navBar(self.ui.dataCanvas, self)
+        self.ui.lytDataWindowBar.addWidget(self.ui.navBarDataWindow)
+
+        # Adds the stylesheet to the navigation bar.
+        with open("../Stylesheets/navBarStylesheet.css", "r") as f:
+            style = f.read()
+            self.ui.frameDataWindowBar.setStyleSheet(style)
+
+        ### Data Table Setup.
+
+        # Sets up the home buttons.
+        self.ui.btnTDataHome.clicked.connect(self.toHome)
+        self.ui.btnDataWindowHome.clicked.connect(self.toHome)
+
+        # Sets up the add row button.
+        self.ui.btnTDataRow.clicked.connect(self.addRow)
+
+        # Sets up the graph data button.
+        self.ui.btnTDataGraph.clicked.connect(self.graphData)
+
+        # Sets up the import CSV button.
+        self.ui.btnTDataCSV.clicked.connect(self.importCSV)
+
+    # Defines the function to take the user to the home page
+    def toHome(self):
+        # Closes the window.
+        self.close()
+        # Opens the main window.
+        mainPage.show()
+
+    # Defines the function to add a new row to the table.
+    def addRow(self):
+        # Stores the number of rows in the table temporarily.
+        index = self.ui.tblTDataPoints.rowCount()
+        # Inserts a new row at the next available index, using the number of rows.
+        self.ui.tblTDataPoints.insertRow(index)
+
+    # Defines the graph data function.
+    def graphData(self):
+        # Defines a temporary counter variable to keep track of which item is being checked.
+        i = 0
+        # Defines the lists of x and y values.
+        dataXValues = []
+        dataYValues = []
+        # Checks there is more than 1 row.
+        if self.ui.tblTDataPoints.rowCount() == 1:
+            # Outputs an error message.
+            QMessageBox.critical(self, "Error", "Please enter more co-ordinate values.")
+            return ValueError
+        else:
+            # Checks if the index is within the number of rows.
+            while (i < self.ui.tblTDataPoints.rowCount()):
+                # Attempts to temporarily store the current x and y values.
+                try:
+                    tempX = self.ui.tblTDataPoints.item(i, 0).text()
+                    tempY = self.ui.tblTDataPoints.item(i, 1).text()
+                # Handles an error if the fields are empty.
+                except AttributeError:
+                    # Outputs an error message.
+                    QMessageBox.critical(self, "Error", "Please fill every data field!")
+                    return AttributeError
+                else:
+                    # Checks if the x value entered is a number.
+                    try:
+                        tempX = float(tempX)
+                    # Outputs an error message if not.
+                    except ValueError:
+                        QMessageBox.critical(self, "Error", "Please enter numerical co-ordinate values!")
+                        return ValueError
+                    else:
+                        # Adds the value to the x value list.
+                        dataXValues.append(tempX)
+
+                    # Checks if the y value entered is a number.
+                    try:
+                        tempY = float(tempY)
+                    # Outputs an error message if not.
+                    except ValueError:
+                        QMessageBox.critical(self, "Error", "Please enter numerical co-ordinate values!")
+                        return ValueError
+                    else:
+                        # Adds the value to the y value list.
+                        dataYValues.append(tempY)
+                    # Increments the counter variable.
+                    i += 1
+
+            # Temporarily stores the table's headers.
+            xHeader = self.ui.tblTDataPoints.horizontalHeaderItem(0).text()
+            yHeader = self.ui.tblTDataPoints.horizontalHeaderItem(1).text()
+            # Converts the x and y value lists into numpy arrays.
+            dataXValues = array(dataXValues)
+            dataYValues = array(dataYValues)
+            # Calculates the gradient and y intercept of the line of best fit for the data.
+            gradient, yInt = polyfit(dataXValues, dataYValues, 1)
+            # Plots the data onto the data graph viewer's canvas.
+            self.ui.dataCanvas.axes.scatter(dataXValues, dataYValues, marker="o")
+            # Plots the line of best fit onto the graph viewer's canvas.
+            self.ui.dataCanvas.axes.plot(dataXValues, (gradient * dataXValues) + yInt)
+            # Sets the axis titles of the graph.
+            self.ui.dataCanvas.axes.set_xlabel(xHeader)
+            self.ui.dataCanvas.axes.set_ylabel(yHeader)
+            # Changes the window to display the graph.
+            self.ui.sWDataWindow.setCurrentIndex(1)
+            # Sets the window title.
+            self.setWindowTitle("Data Graph Viewer")
+
+    # Defines the function to import a csv file.
+    def importCSV(self):
+        # Prompts the user to select a csv file from their computer and extracts the file path.
+        dataCSVFile = QFileDialog.getOpenFileUrl(self, "Select CSV File", filter="CSV files (*.csv)")[0].toLocalFile()
+        # Checks that the user has selected a csv file.
+        if dataCSVFile:
+            # Opens the csv file to read the data from it.
+            with (open(dataCSVFile, "r") as f):
+                # Defines a temporary line counter variable
+                lineCount = 1
+                # Loops through every line in the file
+                for line in f:
+                   # Removes any whitespace from the line and tries to split it into an x and a y value.
+                    try:
+                        tempX, tempY = line.strip().split(",")
+                    # Outputs an error message if there are not exactly 2 values per line.
+                    except ValueError:
+                        QMessageBox.critical(self, "Error", "CSV file is not in the correct format, there must be exactly 2 values per line!")
+                        # Used to exit out of the function.
+                        return ValueError
+                    else:
+                        # Checks the values on the first line (should be header labels).
+                        if lineCount == 1:
+                            # Checks if the values read from the file are strings.
+                            try:
+                                # Checks that the values are not numerical as they must be the header labels.
+                                tempX = float(tempX)
+                                tempY = float(tempY)
+                            # Handles the error raised if the values are not numerical.
+                            except ValueError:
+                                if type(tempX) == str and type(tempY) == str:
+                                    # Sets the table headers to be the input strings.
+                                    self.ui.tblTDataPoints.setHorizontalHeaderLabels([tempX, tempY])
+                                # Returns an error if they are not strings.
+                                else:
+                                    QMessageBox.critical(self, "Error", "Please enter header labels on the first line!")
+                            else:
+                                # Outputs an error message.
+                                QMessageBox.critical(self, "Error", "Please enter valid header labels on the first line!")
+                                return ValueError
+
+                        else:
+                            # Checks if the values are floats.
+                            try:
+                                tempX = float(tempX)
+                                tempY = float(tempY)
+                            # If they are not floats, an error message is returned.
+                            except ValueError:
+                                QMessageBox.critical(self, "Error", "Please enter numerical co-ordinate values!")
+                                # Used to exit out of the function.
+                                return ValueError
+                            else:
+                                # Adds a new row to the table if the 1 default row has been filled.
+                                if lineCount > 2:
+                                    self.addRow()
+
+                                # Sets the items in the new row to be the x and y values from the csv file.
+                                self.ui.tblTDataPoints.setItem((lineCount - 2), 0, QTableWidgetItem(str(tempX)))
+                                self.ui.tblTDataPoints.setItem((lineCount - 2), 1, QTableWidgetItem(str(tempY)))
+
+                    # Increments the line counter variable.
+                    lineCount += 1
+        else:
+            # Returns an error if the file was not selected.
+            QMessageBox.critical(self, "Error", "Please select a valid CSV file!")
+            return FileNotFoundError
+
+# Defines the graph canvas class.
+class graphCanvas(figureCanvas):
+    # Defines the constructor method.
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        # Adds the figure to the canvas.
+        self.fig = Figure(figsize=(width, height), dpi=dpi)
+        # Adds the axes to the figure.
+        self.axes = self.fig.add_subplot(111)
+        # Accesses the figure class' constructor method.
+        super().__init__(self.fig)
 
 # Runs the program if the file ran is the main file.
 if __name__ == "__main__":
@@ -475,3 +728,5 @@ if __name__ == "__main__":
     mainPage.show()
     # Executes the application.
     app.exec()
+
+
