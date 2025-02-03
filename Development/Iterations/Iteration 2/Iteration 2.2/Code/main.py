@@ -620,6 +620,9 @@ class dataWindow(QDialog):
                     # Increments the counter variable.
                     self.i += 1
 
+            # Temporarily stores the table's headers.
+            xHeader = self.ui.tblTDataPoints.horizontalHeaderItem(0).text()
+            yHeader = self.ui.tblTDataPoints.horizontalHeaderItem(1).text()
             # Converts the x and y value lists into numpy arrays.
             self.dataXValues = array(self.dataXValues)
             self.dataYValues = array(self.dataYValues)
@@ -629,6 +632,9 @@ class dataWindow(QDialog):
             self.ui.dataCanvas.axes.scatter(self.dataXValues, self.dataYValues, marker="o")
             # Plots the line of best fit onto the graph viewer's canvas.
             self.ui.dataCanvas.axes.plot(self.dataXValues, (self.gradient * self.dataXValues) + self.yint)
+            # Sets the axis titles of the graph.
+            self.ui.dataCanvas.axes.set_xlabel(xHeader)
+            self.ui.dataCanvas.axes.set_ylabel(yHeader)
             # Changes the window to display the graph.
             self.ui.sWDataWindow.setCurrentIndex(1)
             # Sets the window title.
@@ -636,12 +642,11 @@ class dataWindow(QDialog):
 
     # Defines the function to import a csv file.
     def importCSV(self):
-        # Prompts the user to select a csv file from their computer.
-        self.dataCSVFile = QFileDialog.getOpenFileUrl(self, "Select CSV File", filter="CSV files (*.csv)")
+        # Prompts the user to select a csv file from their computer and extracts the file path.
+        self.dataCSVFile = QFileDialog.getOpenFileUrl(self, "Select CSV File", filter="CSV files (*.csv)")[0].toLocalFile()
         # Checks that the user has selected a csv file.
         if self.dataCSVFile:
-            # Extracts the csv file path from the QUrl item returned by the QFileDialog and converts it to a local file path.
-            self.dataCSVFile = self.dataCSVFile[0].toLocalFile()
+            print(self.dataCSVFile)
             # Opens the csv file to read the data from it.
             with (open(self.dataCSVFile, "r") as self.f):
                 # Defines a temporary line counter variable
