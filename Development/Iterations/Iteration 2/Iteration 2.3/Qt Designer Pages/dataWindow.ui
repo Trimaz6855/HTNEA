@@ -235,6 +235,117 @@
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="randomDataGrpah">
+    <widget class="QLineEdit" name="txtRDataNum">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>170</y>
+       <width>261</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Number of Data Points</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtRDataXLwr">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>230</y>
+       <width>121</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>X Lower Bound</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtRDataXUpr">
+     <property name="geometry">
+      <rect>
+       <x>410</x>
+       <y>230</y>
+       <width>121</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>X Upper Bound</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtRDataYLwr">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>290</y>
+       <width>121</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Y Lower Bound</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtRDataYUpr">
+     <property name="geometry">
+      <rect>
+       <x>410</x>
+       <y>290</y>
+       <width>121</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Y Upper Bound</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnRDataGraph">
+     <property name="geometry">
+      <rect>
+       <x>244</x>
+       <y>350</y>
+       <width>141</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Graph</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnRDataHome">
+     <property name="geometry">
+      <rect>
+       <x>420</x>
+       <y>350</y>
+       <width>141</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Home</string>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="gVRData">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>40</y>
+       <width>541</width>
+       <height>511</height>
+      </rect>
+     </property>
+    </widget>
+    <zorder>gVRData</zorder>
+    <zorder>txtRDataNum</zorder>
+    <zorder>txtRDataXLwr</zorder>
+    <zorder>txtRDataXUpr</zorder>
+    <zorder>txtRDataYLwr</zorder>
+    <zorder>txtRDataYUpr</zorder>
+    <zorder>btnRDataGraph</zorder>
+    <zorder>btnRDataHome</zorder>
+   </widget>
   </widget>
  </widget>
  <resources/>

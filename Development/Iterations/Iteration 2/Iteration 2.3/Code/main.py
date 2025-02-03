@@ -418,6 +418,9 @@ class mainPage(QMainWindow):
         # Sets up the data table button.
         self.ui.btnMainTable.clicked.connect(self.toDataTable)
 
+        # Sets up the random data graph button.
+        self.ui.btnMainRandom.clicked.connect(self.toRandomData)
+
     # Defines the function that takes the user to the login page.
     def toLogin(self):
         # Hides the main menu.
@@ -499,6 +502,23 @@ class mainPage(QMainWindow):
         dialog = QDialog()
         # Instantiates a dataWindow object.
         data = dataWindow()
+        # Opens the data table page.
+        data.ui.sWDataWindow.setCurrentIndex(0)
+        # Shows the dataWindow object.
+        data.show()
+        # Executes the dataWindow object.
+        data.exec()
+
+    # Defines the function to take the user to the random data graph page.
+    def toRandomData(self):
+        # Hides the main window.
+        self.hide()
+        # Instantiates a new QDialog object.
+        dialog = QDialog()
+        # Instantiates a new dataWindow object.
+        data = dataWindow()
+        # Opens the random data graphing page.
+        data.ui.sWDataWindow.setCurrentIndex(2)
         # Shows the dataWindow object.
         data.show()
         # Executes the dataWindow object.
@@ -525,7 +545,7 @@ class dataWindow(QDialog):
         ### Data Graph Viewer Setup.
 
         # Sets the current widget to be the graph viewer.
-        self.ui.sWDataWindow.setCurrentIndex(2)
+        self.ui.sWDataWindow.setCurrentIndex(1)
 
         # Creates the dataCanvas.
         self.ui.dataCanvas = graphCanvas(self, width=5, height=5, dpi=100)
@@ -556,6 +576,11 @@ class dataWindow(QDialog):
 
         # Sets up the import CSV button.
         self.ui.btnTDataCSV.clicked.connect(self.importCSV)
+
+        ### Random Data Graphing Setup ###
+
+        # Sets up the home button.
+        self.ui.btnRDataHome.clicked.connect(self.toHome)
 
     # Defines the function to take the user to the home page
     def toHome(self):
