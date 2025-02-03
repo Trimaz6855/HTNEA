@@ -6,10 +6,10 @@ My project is a graphical and scientific calculator.
 
 ## Iteration Checklist:
 - Iteration 1 - Login and Registration System. / Completed!
-- Iteration 2 - Data Graphing.
+- Iteration 2 - Data Graphing. / Completed
     - Iteration 2.1 - Data Table and Data Graph Viewer. / Completed!
     - Iteration 2.2 - CSV Importer. / Completed!
-    - Iteration 2.3 - Random Data Graph.
+    - Iteration 2.3 - Random Data Graph. / Completed!
 - Iteration 3 - Function Graphing.
     - Iteration 3.1 - Function Catalogue.
     - Iteration 3.2 - Implicit Function Graphing and Saving.
