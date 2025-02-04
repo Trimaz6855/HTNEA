@@ -21,7 +21,7 @@ from matplotlib.figure import Figure
 from matplotlib import use
 
 # Importing numpy.
-from numpy import polyfit, array
+from numpy import polyfit, array, random
 
 # Sets the matplotlib style to be used.
 use("QtAgg")
@@ -519,6 +519,8 @@ class mainPage(QMainWindow):
         data = dataWindow()
         # Opens the random data graphing page.
         data.ui.sWDataWindow.setCurrentIndex(2)
+        # Sets the window title.
+        data.setWindowTitle("Random Data Graphing")
         # Shows the dataWindow object.
         data.show()
         # Executes the dataWindow object.
@@ -581,6 +583,9 @@ class dataWindow(QDialog):
 
         # Sets up the home button.
         self.ui.btnRDataHome.clicked.connect(self.toHome)
+
+        # Sets up the graph button.
+        self.ui.btnRDataGraph.clicked.connect(self.randomGraph)
 
     # Defines the function to take the user to the home page
     def toHome(self):
@@ -731,6 +736,69 @@ class dataWindow(QDialog):
             # Returns an error if the file was not selected.
             QMessageBox.critical(self, "Error", "Please select a valid CSV file!")
             return FileNotFoundError
+
+    # Defines the random graph function.
+    def randomGraph(self):
+        # Temporarily stores the number of data points the user would like to generate.
+        dataPointsNum = self.ui.txtRDataNum.text()
+        # Temporarily stores the lower and upper bounds for the user's x values.
+        dataXLwr, dataXUpr = self.ui.txtRDataXLwr.text(), self.ui.txtRDataXUpr.text()
+        # Temporarily stores the lower and upper bounds for the user's y values.
+        dataYLwr, dataYUpr = self.ui.txtRDataYLwr.text(), self.ui.txtRDataYUpr.text()
+        # Checks that the number of data points is an integer.
+        try:
+            datapointsNum = int(dataPointsNum)
+        except ValueError:
+            # Outputs an error message if the number of data points is not an integer.
+            QMessageBox.critical(self, "Error", "Please enter an integer number of data points to generate!")
+            return ValueError
+        else:
+            # Checks that the upper and lower bounds are all integers.
+            try:
+                dataXLwr = int(dataXLwr)
+                dataXUpr = int(dataXUpr)
+                dataYLwr = int(dataYLwr)
+                dataYUpr = int(dataYUpr)
+            except ValueError:
+                # Outputs an error if they are not integers.
+                QMessageBox.critical(self, "Error", "Please ensure your upper and lower bounds are integers!")
+                return ValueError
+            else:
+                # Checks if the x lower bound is greater than the x upper bound.
+                if dataXLwr > dataXUpr:
+                    # Outputs an error message.
+                    QMessageBox.critical(self, "Error", "Please ensure the x upper bound is greater than the x lower bound!")
+                    return ValueError
+                # Checks that the x upper bound does not equal the x lower bound.
+                elif dataXLwr == dataXUpr:
+                    # Outputs an error message.
+                    QMessageBox.critical(self, "Error", "Please ensure your x upper and lower bounds are not equal!")
+                    return ValueError
+                # Checks if the y lower bound is greater than the y upper bound.
+                if dataYLwr > dataYUpr:
+                    # Outputs an error message.
+                    QMessageBox.critical(self, "Error", "Please ensure the y upper bound is greater than the y lower bound!")
+                    return ValueError
+                # Checks that the y upper bound does not equal the y lower bound.
+                elif dataYLwr == dataYUpr:
+                    # Outputs an error message.
+                    QMessageBox.critical(self, "Error", "Please ensure the y upper and lower bounds are not equal!")
+                    return ValueError
+
+                # Generates the random x values.
+                dataXValues = random.randint(dataXLwr, dataXUpr, size=(datapointsNum))
+                # Generates the random y values.
+                dataYValues = random.randint(dataYLwr, dataYUpr, size=(datapointsNum))
+                # Calculates the gradient and y-intecept of the line of best fit for the data.
+                gradient, yInt = polyfit(dataXValues, dataYValues, 1)
+                # Plots the data points on the graph canvas.
+                self.ui.dataCanvas.axes.scatter(dataXValues, dataYValues, marker="o")
+                # Plots the line of best fit on the graph canvas.
+                self.ui.dataCanvas.axes.plot(dataXValues, (gradient * dataXValues) + yInt)
+                # Changes the window to display the graph.
+                self.ui.sWDataWindow.setCurrentIndex(1)
+                # Sets the window title.
+                self.setWindowTitle("Data Graph Viewer")
 
 # Defines the graph canvas class.
 class graphCanvas(figureCanvas):
