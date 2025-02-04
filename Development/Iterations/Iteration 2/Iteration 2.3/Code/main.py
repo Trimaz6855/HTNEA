@@ -747,12 +747,17 @@ class dataWindow(QDialog):
         dataYLwr, dataYUpr = self.ui.txtRDataYLwr.text(), self.ui.txtRDataYUpr.text()
         # Checks that the number of data points is an integer.
         try:
-            datapointsNum = int(dataPointsNum)
+            dataPointsNum = int(dataPointsNum)
         except ValueError:
             # Outputs an error message if the number of data points is not an integer.
             QMessageBox.critical(self, "Error", "Please enter an integer number of data points to generate!")
             return ValueError
         else:
+            # Checks that the number of data points is positive.
+            if dataPointsNum <= 0:
+                # Outputs an error message if the number of data points is not positive
+                QMessageBox.critical(self, "Error", "Please enter a valid number of data points to generate!")
+                return ValueError
             # Checks that the upper and lower bounds are all integers.
             try:
                 dataXLwr = int(dataXLwr)
@@ -786,9 +791,9 @@ class dataWindow(QDialog):
                     return ValueError
 
                 # Generates the random x values.
-                dataXValues = random.randint(dataXLwr, dataXUpr, size=(datapointsNum))
+                dataXValues = random.randint(dataXLwr, dataXUpr, size=(dataPointsNum))
                 # Generates the random y values.
-                dataYValues = random.randint(dataYLwr, dataYUpr, size=(datapointsNum))
+                dataYValues = random.randint(dataYLwr, dataYUpr, size=(dataPointsNum))
                 # Calculates the gradient and y-intecept of the line of best fit for the data.
                 gradient, yInt = polyfit(dataXValues, dataYValues, 1)
                 # Plots the data points on the graph canvas.
