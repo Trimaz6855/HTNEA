@@ -1,0 +1,1 @@
+pyuic6 -x graphTransformation.ui -o graphTransformation.py

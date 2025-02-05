@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mainPage</class>
+ <widget class="QMainWindow" name="mainPage">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QGraphicsView" name="gVMainData">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>110</y>
+      <width>256</width>
+      <height>431</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="gVMainFunc">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>111</y>
+      <width>256</width>
+      <height>431</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblMainData">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>140</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <underline>true</underline>
+     </font>
+    </property>
+    <property name="text">
+     <string>Data Graphing</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblMainFunc">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>140</y>
+      <width>161</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <underline>true</underline>
+     </font>
+    </property>
+    <property name="text">
+     <string>Function Graphing</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnMainTable">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>220</y>
+      <width>201</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Table</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnMainRandom">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>300</y>
+      <width>201</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Random</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnMain3D">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>380</y>
+      <width>201</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>3D Algebraic</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnMainImplicit">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>220</y>
+      <width>201</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Implicit</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnMainAlgebraic">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>300</y>
+      <width>201</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>2D Algebraic</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frameBar">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>-10</y>
+      <width>801</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QPushButton" name="btnMainHome">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>201</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>Home</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnMainFunCat">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>10</y>
+       <width>201</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>Function Catalogue</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnMainLogin">
+     <property name="geometry">
+      <rect>
+       <x>600</x>
+       <y>10</y>
+       <width>201</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>Login</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnMainSciDrp">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>10</y>
+       <width>201</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>Scientific Functions v</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnMainAccDrp">
+     <property name="geometry">
+      <rect>
+       <x>600</x>
+       <y>10</y>
+       <width>201</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>Account v</string>
+     </property>
+    </widget>
+    <zorder>btnMainLogin</zorder>
+    <zorder>btnMainFunCat</zorder>
+    <zorder>btnMainHome</zorder>
+    <zorder>btnMainSciDrp</zorder>
+    <zorder>btnMainAccDrp</zorder>
+   </widget>
+   <widget class="QFrame" name="frameSci">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>50</y>
+      <width>201</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QPushButton" name="btnMainStats">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>201</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>Statistics</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnMainTrig">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>201</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>Trigonometry</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frameAcc">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>50</y>
+      <width>201</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QPushButton" name="btnMainSaved">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>201</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>Saved Graphs</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnMainLogout">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>201</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>Logout</string>
+     </property>
+    </widget>
+   </widget>
+   <zorder>gVMainFunc</zorder>
+   <zorder>gVMainData</zorder>
+   <zorder>lblMainData</zorder>
+   <zorder>lblMainFunc</zorder>
+   <zorder>btnMainTable</zorder>
+   <zorder>btnMainRandom</zorder>
+   <zorder>btnMain3D</zorder>
+   <zorder>btnMainImplicit</zorder>
+   <zorder>btnMainAlgebraic</zorder>
+   <zorder>frameBar</zorder>
+   <zorder>frameSci</zorder>
+   <zorder>frameAcc</zorder>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>btnMainHome</tabstop>
+  <tabstop>btnMainSciDrp</tabstop>
+  <tabstop>btnMainFunCat</tabstop>
+  <tabstop>btnMainLogin</tabstop>
+  <tabstop>btnMainAccDrp</tabstop>
+  <tabstop>btnMainStats</tabstop>
+  <tabstop>btnMainTrig</tabstop>
+  <tabstop>btnMainSaved</tabstop>
+  <tabstop>btnMainLogout</tabstop>
+  <tabstop>gVMainData</tabstop>
+  <tabstop>btnMainTable</tabstop>
+  <tabstop>btnMainRandom</tabstop>
+  <tabstop>gVMainFunc</tabstop>
+  <tabstop>btnMainImplicit</tabstop>
+  <tabstop>btnMainAlgebraic</tabstop>
+  <tabstop>btnMain3D</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
