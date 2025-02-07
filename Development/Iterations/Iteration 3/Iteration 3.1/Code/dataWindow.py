@@ -66,7 +66,7 @@ class Ui_dataWindow(object):
         self.graphViewer = QtWidgets.QWidget()
         self.graphViewer.setObjectName("graphViewer")
         self.gridLayoutWidget = QtWidgets.QWidget(parent=self.graphViewer)
-        self.gridLayoutWidget.setGeometry(QtCore.QRect(80, 90, 661, 451))
+        self.gridLayoutWidget.setGeometry(QtCore.QRect(70, 90, 661, 451))
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
         self.lytDataWindowCanvas = QtWidgets.QGridLayout(self.gridLayoutWidget)
         self.lytDataWindowCanvas.setContentsMargins(0, 0, 0, 0)
@@ -83,7 +83,7 @@ class Ui_dataWindow(object):
         self.lytDataWindowBar.setContentsMargins(0, 0, 0, 0)
         self.lytDataWindowBar.setObjectName("lytDataWindowBar")
         self.btnDataWindowHome = QtWidgets.QPushButton(parent=self.graphViewer)
-        self.btnDataWindowHome.setGeometry(QtCore.QRect(330, 560, 161, 24))
+        self.btnDataWindowHome.setGeometry(QtCore.QRect(320, 560, 161, 24))
         self.btnDataWindowHome.setObjectName("btnDataWindowHome")
         self.sWDataWindow.addWidget(self.graphViewer)
         self.randomDataGrpah = QtWidgets.QWidget()
@@ -123,7 +123,7 @@ class Ui_dataWindow(object):
         self.sWDataWindow.addWidget(self.randomDataGrpah)
 
         self.retranslateUi(dataWindow)
-        self.sWDataWindow.setCurrentIndex(0)
+        self.sWDataWindow.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(dataWindow)
 
     def retranslateUi(self, dataWindow):

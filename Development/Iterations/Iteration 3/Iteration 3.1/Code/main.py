@@ -4,6 +4,8 @@ from registration import Ui_regWindow
 from mainWindow import Ui_mainPage
 from dataWindow import Ui_dataWindow
 from catalogueWindow import Ui_catalogueWindow
+from graphTransformation import Ui_graphTransformation
+from functionWindow import Ui_functionWindow
 
 # Importing PyQt for window functionality.
 from PyQt6.QtWidgets import QMainWindow, QApplication, QLineEdit, QMessageBox, QDialog, QFileDialog, QTableWidgetItem
@@ -20,6 +22,10 @@ import re
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as figureCanvas,  NavigationToolbar2QT as navBar
 from matplotlib.figure import Figure
 from matplotlib import use
+
+# Importing sympy for graphing.
+from sympy import plot_implicit, plot, Eq
+from sympy.plotting import plot3d
 
 # Importing numpy.
 from numpy import polyfit, array, random
@@ -865,8 +871,10 @@ class catalogueWindow(QDialog):
         self.ui.setupUi(self)
         # Sets the window title.
         self.setWindowTitle("Catalogue Viewer")
+        # Stores the data as an attribute.
+        self.data = data
         # Instantiates a new instance of catalogueTableModel.
-        self.dataModel = catalogueTableModel(data)
+        self.dataModel = catalogueTableModel(self.data)
         # Instantiates a proxy model, allowing the table to be sorted.
         self.proxyModel = QSortFilterProxyModel()
         # Sets the source of the proxy model to be the data model.
@@ -888,12 +896,44 @@ class catalogueWindow(QDialog):
         # Sets up the home button.
         self.ui.btnCatHome.clicked.connect(self.toHome)
 
+        # Sets up the graph button.
+        self.ui.btnCatGraph.clicked.connect(self.graph)
+
     # Defines the function to take the user to the home page.
     def toHome(self):
         # Closes the window.
         self.close()
         # Shows the main window.
         mainPage.show()
+
+    # Defines the graph function.
+    def graph(self):
+        # Checks that the user has selected a row when the button is clicked.
+        selectedRow = self.ui.tblCatFunctions.currentIndex().row()
+        # Checks if the user has not selected a row.
+        if selectedRow == -1:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please select a function to graph!")
+            return IndexError
+        # Runs if the user has selected a row.
+        else:
+            # Loops through the data in the row to temporarily store the function, its range, its domain and its axis titles and the graph type.
+            funcToGraph = []
+            column = 0
+            while column <= 8:
+                funcToGraph.append(self.proxyModel.index(selectedRow, column).data())
+                column += 1
+            # Closes the current window.
+            self.close()
+            # Instantiates a new QDialog object.
+            dialog = QDialog()
+            # Instantiates a new instance of the graphTranslation clas.
+            graphTWindow = transformWindow(funcToGraph)
+            # Shows the new window.
+            graphTWindow.show()
+            # Executes the window.
+            graphTWindow.exec()
+            print(funcToGraph)
 
 # Defines the function catalogue table model.
 class catalogueTableModel(QAbstractTableModel):
@@ -944,6 +984,134 @@ class catalogueTableModel(QAbstractTableModel):
         elif orientation == Qt.Orientation.Vertical and role == Qt.ItemDataRole.DisplayRole:
             # Numbers the rows.
             return '{}'.format(section + 1)
+
+# Defines the graph translation window class.
+class transformWindow(QDialog):
+    # Defines the constructor method.
+    def __init__(self, funcToGraph):
+        # Accesses the QDialog class' constructor method.
+        super().__init__()
+        # Sets the ui of the window to be an instance of the Ui_graphTransformation class.
+        self.ui = Ui_graphTransformation()
+        # Sets up the ui.
+        self.ui.setupUi(self)
+        # Sets the window title.
+        self.setWindowTitle("Enter Graph Transformations")
+        # Applies the stylesheet to the window.
+        with open("../Stylesheets/mainStylesheet.css", "r") as f:
+            style = f.read()
+            self.setStyleSheet(style)
+
+        # Stores the function to graph as an attribute of the class.
+        self.funcToGraph = funcToGraph
+
+        # Sets up the graph button.
+        self.ui.btnGTGraph.clicked.connect(self.graphClicked)
+
+    def graphClicked(self):
+        print("Clicked")
+        # Temporarily stores the values in the text fields.
+        xSF = self.ui.txtGTXSF.text()
+        ySF = self.ui.txtGTYSF.text()
+        xTr = self.ui.txtGTXVector.text()
+        yTr = self.ui.txtGTYVector.text()
+        print(xSF, type(xSF))
+        # Checks if an x scale factor has been entered.
+        if xSF == "":
+            # If none has been entered, it defaults to 1.
+            xSF = 1
+        # Checks if a y scale factor has been entered.
+        if ySF == "":
+            # If none has been entered, it defaults to 1.
+            ySF = 1
+        # Checks if an x translation has been entered.
+        if xTr == "":
+            # If not, it defaults to 0.
+            xTr = 0
+        # Checks if a y translation has been entered.
+        if yTr == "":
+            # If not, it defaults to 0.
+            yTr = 0
+        # Checks the provided transformations are numbers.
+        try:
+            xSF = float(xSF)
+            ySF = float(ySF)
+            xTr = float(xTr)
+            yTr = float(yTr)
+        # If the transformations are not numbers, output an error message
+        except ValueError:
+            QMessageBox.critical(self, "Error", "Please enter numerical transformations!")
+            return ValueError
+        else:
+            # Temporarily stores the type of function the function is.
+            functionType = self.funcToGraph[0]
+            # Checks what type of function it is and runs a section of code based on that.
+            match functionType:
+                # Runs if the function is a 3D function.
+                case "3D":
+                    # Applies the input transformations to x.
+                    self.funcToGraph[7] = self.funcToGraph[7].replace("x", f"({xSF}*(x-{xTr}))")
+                    # Applies the input transformations to x.
+                    self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y+{yTr}))")
+                    # Closes the current window.
+                    self.close()
+                    # Closes the function catalogue window.
+                    #catalogueWindow.close()
+                    # Instantiates a new QDialog object.
+                    dialog = QDialog()
+                    # Instantiates a new object of the functionWindow class.
+                    func = functionWindow()
+                    # Shows the window.
+                    func.show()
+                    # Calls the 3D graph plotting function.
+                    func.threeDimPlot(self.funcToGraph)
+                    # Executes the window.
+                    func.exec()
+
+                # Runs if the function is a 2D function.
+                case "2D":
+                    # Applies the input transformations to y.
+                    self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y+{yTr}))")
+                    # Applies the input transformations to x.
+                    self.funcToGraph[8] = self.funcToGraph[8].replace("x", f"({xSF}*(x+{xTr}))")
+                # Runs if the function is implicit.
+                case "Implicit":
+                    # Applies the input transformations to y.
+                    self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({xSF}*({xTr}))")
+                    # Applies the input transformations to x.
+                    self.funcToGraph[8] = self.funcToGraph[8].replace("x", f"({xSF}*(x+{xTr}))")
+
+# Defines the function window class.
+class functionWindow(QDialog):
+    # Defines the constructor method.
+    def __init__(self):
+        # Accesses the QDialog class' constructor method.
+        super().__init__()
+        # Makes the ui of the window an object of the Ui_functionWindow class.
+        self.ui = Ui_functionWindow()
+        # Sets up the ui.
+        self.ui.setupUi(self)
+        # Applies the stylesheet to the ui.
+        with open("../Stylesheets/mainStylesheet.css", "r") as f:
+            style = f.read()
+            self.setStyleSheet(style)
+
+        # Instantiates the canvas widget.
+        self.ui.funcCanvas = graphCanvas(self, width=5, height=5, dpi=100)
+        # Adds the canvas widget to the window.
+        self.ui.lytFuncWindowCanvas.addWidget(self.ui.funcCanvas)
+        # Instantiates the toolbar widget.
+        self.ui.funcNavBar = navBar(self.ui.funcCanvas, self)
+        # Adds the toolbar widget to the window.
+        self.ui.lytfuncWindowBar.addWidget(self.ui.funcNavBar)
+        # Applies the stylesheet to the toolbar in the window.
+        with open("../Stylesheets/navBarStylesheet.css", "r") as f:
+            style = f.read()
+            self.ui.funcNavBar.setStyleSheet(style)
+
+    # Defines the function to plot 3d graphs.
+    def threeDimPlot(self, funcToGraph):
+        print(funcToGraph)
 
 # Runs the program if the file ran is the main file.
 if __name__ == "__main__":
