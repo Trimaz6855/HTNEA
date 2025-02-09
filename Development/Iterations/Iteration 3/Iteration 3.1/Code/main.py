@@ -22,15 +22,16 @@ import re
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as figureCanvas,  NavigationToolbar2QT as navBar
 from matplotlib.figure import Figure
 from matplotlib import use
+import matplotlib.pyplot as plt
 
 # Importing sympy for graphing.
-from sympy import plot_implicit, plot, Eq
+from sympy import plot_implicit, plot, Eq, symbols, sympify, lambdify
 from sympy.plotting import plot3d
 
 # Importing numpy.
-from numpy import polyfit, array, random
+from numpy import polyfit, array, random, linspace, meshgrid, outer, ones
 
-# Sets the matplotlib style to be used.
+# Sets the matplotlib backend to be used.
 use("QtAgg")
 
 # Creates the database connection string.
@@ -694,8 +695,8 @@ class dataWindow(QDialog):
                     i += 1
 
             # Temporarily stores the table's headers.
-            xHeader = self.ui.tblTDataPoints.Qt.HorizontalHeaderItem(0).text()
-            yHeader = self.ui.tblTDataPoints.Qt.HorizontalHeaderItem(1).text()
+            xHeader = self.ui.tblTDataPoints.horizontalHeaderItem(0).text()
+            yHeader = self.ui.tblTDataPoints.horizontalHeaderItem(1).text()
             # Converts the x and y value lists into numpy arrays.
             dataXValues = array(dataXValues)
             dataYValues = array(dataYValues)
@@ -745,7 +746,7 @@ class dataWindow(QDialog):
                             except ValueError:
                                 if type(tempX) == str and type(tempY) == str:
                                     # Sets the table headers to be the input strings.
-                                    self.ui.tblTDataPoints.setQt.HorizontalHeaderLabels([tempX, tempY])
+                                    self.ui.tblTDataPoints.setHorizontalHeaderLabels([tempX, tempY])
                                 # Returns an error if they are not strings.
                                 else:
                                     QMessageBox.critical(self, "Error", "Please enter header labels on the first line!")
@@ -1055,8 +1056,6 @@ class transformWindow(QDialog):
                     self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y+{yTr}))")
                     # Closes the current window.
                     self.close()
-                    # Closes the function catalogue window.
-                    #catalogueWindow.close()
                     # Instantiates a new QDialog object.
                     dialog = QDialog()
                     # Instantiates a new object of the functionWindow class.
@@ -1074,12 +1073,46 @@ class transformWindow(QDialog):
                     self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y+{yTr}))")
                     # Applies the input transformations to x.
                     self.funcToGraph[8] = self.funcToGraph[8].replace("x", f"({xSF}*(x+{xTr}))")
+
                 # Runs if the function is implicit.
                 case "Implicit":
-                    # Applies the input transformations to y.
-                    self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({xSF}*({xTr}))")
-                    # Applies the input transformations to x.
-                    self.funcToGraph[8] = self.funcToGraph[8].replace("x", f"({xSF}*(x+{xTr}))")
+                    # Checks if x and y are both on the left side of the equation.
+                    if "y" in self.funcToGraph[7] and "x" in self.funcToGraph[7]:
+                        # Applies the input transformations to y.
+                        self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({xSF}*(y+{xTr}))")
+                        # Applies the input transformations to x.
+                        self.funcToGraph[7] = self.funcToGraph[7].replace("x", f"({xSF}*(x+{xTr}))")
+                    # Checks if y is on the left and x is on the right side of the equation.
+                    elif "y" in self.funcToGraph[7] and "x" not in self.funcToGraph[7] and "x" in self.funcToGraph[8]:
+                        # Applies the input transformations to y.
+                        self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({xSF}*(y+{xTr}))")
+                        # Applies the input transformations to x.
+                        self.funcToGraph[8] = self.funcToGraph[8].replace("x", f"({xSF}*(x+{xTr}))")
+                    # Checks if y and x are on the right side of the equation.
+                    elif "y" not in self.funcToGraph[7] and "x" in self.funcToGraph[8] and "y" in self.funcToGraph[8]:
+                        # Applies the input transformations to y.
+                        self.funcToGraph[8] = self.funcToGraph[8].replace("y", f"({xSF}*(y+{xTr}))")
+                        # Applies the input transformations to x.
+                        self.funcToGraph[8] = self.funcToGraph[8].replace("x", f"({xSF}*(x+{xTr}))")
+                    # Checks if y is on the right and x is on the left side of the equation.
+                    elif "y" not in self.funcToGraph[7] and "y" in self.funcToGraph[8] and "x" not in self.funcToGraph[8] and "x" in self.funcToGraph[7]:
+                        # Applies the input transformations to y.
+                        self.funcToGraph[8] = self.funcToGraph[8].replace("y", f"({xSF}*(y+{xTr}))")
+                        # Applies the input transformations to x.
+                        self.funcToGraph[7] = self.funcToGraph[7].replace("x", f"({xSF}*(x+{xTr}))")
+                    # Closes the current window.
+                    self.close()
+                    # Instantiates a new QDialog object.
+                    dialog = QDialog()
+                    # Instantiates a new object of the functionWindow class.
+                    func = functionWindow()
+                    # Shows the window.
+                    func.show()
+                    print(self.funcToGraph)
+                    # Calls the 3D graph plotting function.
+                    func.implicitPlot(self.funcToGraph)
+                    # Executes the window.
+                    func.exec()
 
 # Defines the function window class.
 class functionWindow(QDialog):
@@ -1111,7 +1144,47 @@ class functionWindow(QDialog):
 
     # Defines the function to plot 3d graphs.
     def threeDimPlot(self, funcToGraph):
-        print(funcToGraph)
+        # Tells sympy which symbols are being used.
+        x, y, z = symbols("x, y, z")
+        # Converts the user's equation into a python function.
+        equation = sympify(funcToGraph[7])
+        # Converts the function of the equation into a lambda function using the specified symbols.
+        zFunc = lambdify([x,y], equation, "numpy")
+        # Generates a 2D array of x values.
+        xVals = outer(linspace(funcToGraph[2], funcToGraph[3], 10), ones(10))
+        # Duplicates the x value 2D array for the y values.
+        yVals = xVals.copy().T
+        # Calculates the z values for the x and y values using the lambda function.
+        zVals = zFunc(xVals, yVals)
+        # Temporarily stores the figure of the function canvas.
+        fig = self.ui.funcCanvas.figure
+        # Adds a 3d axis to the function canvas.
+        ax = fig.add_subplot(projection="3d")
+        # Plots the x, y and z values onto the 3d axis.
+        ax.plot_surface(xVals, yVals, zVals)
+        # Draws the plot.
+        self.ui.funcCanvas.draw()
+        # Removes the pre-existing 2D axis.
+        fig.delaxes(fig.axes[0])
+
+    # Defines the function to plot implicit graphs.
+    def implicitPlot(self, funcToGraph):
+        # Tells sympy which symbols to use.
+        x, y = symbols("x, y")
+        # Converts the left hand side of the equation to a python expression.
+        lhs = sympify(funcToGraph[7])
+        # Converts the right hand side of the equation to a python expression.
+        rhs = sympify(funcToGraph[8])
+        # Creates an equation using the left and right sides of the equation.
+        equation = Eq(lhs, rhs)
+        # Creates an implict plot and adds it to the subplot.
+        plot1 = plot_implicit(equation, (x, funcToGraph[2], funcToGraph[3]), (y, funcToGraph[5], funcToGraph[6]))
+        # Sets the figure of the canvas to be the figure of the implicit plot.
+        self.ui.funcCanvas.figure = plot1.fig
+        # Draws the changes to the canvas.
+        self.ui.funcCanvas.draw()
+        # Closes the implicit plot.
+        plot1.close()
 
 # Runs the program if the file ran is the main file.
 if __name__ == "__main__":
