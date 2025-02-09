@@ -871,7 +871,7 @@ class catalogueWindow(QDialog):
         # Sets up the ui.
         self.ui.setupUi(self)
         # Sets the window title.
-        self.setWindowTitle("Catalogue Viewer")
+        self.setWindowTitle("Function Catalogue")
         # Stores the data as an attribute.
         self.data = data
         # Instantiates a new instance of catalogueTableModel.
@@ -1184,6 +1184,8 @@ class functionWindow(QDialog):
         self.ui.funcCanvas.draw()
         # Removes the pre-existing 2D axis.
         fig.delaxes(fig.axes[0])
+        # Sets the window title.
+        self.setWindowTitle("3D Graph Viewer")
 
     # Defines the function to plot implicit graphs.
     def implicitPlot(self, funcToGraph):
@@ -1203,6 +1205,8 @@ class functionWindow(QDialog):
         self.ui.funcCanvas.draw()
         # Closes the implicit plot.
         plot1.close()
+        # Sets the window title.
+        self.setWindowTitle("Implicit Graph Viewer")
 
     # Defines the 2D algebraic plot function
     def twoDimPlot(self, funcToGraph):
@@ -1218,6 +1222,8 @@ class functionWindow(QDialog):
         yVals = yFunc(xVals)
         # Plots the values onto the canvas.
         self.ui.funcCanvas.axes.plot(xVals, yVals)
+        # Sets the window title.
+        self.setWindowTitle("2D Graph Viewer")
 
     # Defines the function to take the user to the home page.
     def toHome(self):
