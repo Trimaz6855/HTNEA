@@ -1010,13 +1010,11 @@ class transformWindow(QDialog):
         self.ui.btnGTGraph.clicked.connect(self.graphClicked)
 
     def graphClicked(self):
-        print("Clicked")
         # Temporarily stores the values in the text fields.
         xSF = self.ui.txtGTXSF.text()
         ySF = self.ui.txtGTYSF.text()
         xTr = self.ui.txtGTXVector.text()
         yTr = self.ui.txtGTYVector.text()
-        print(xSF, type(xSF))
         # Checks if an x scale factor has been entered.
         if xSF == "":
             # If none has been entered, it defaults to 1.
@@ -1069,10 +1067,28 @@ class transformWindow(QDialog):
 
                 # Runs if the function is a 2D function.
                 case "2D":
-                    # Applies the input transformations to y.
-                    self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y+{yTr}))")
-                    # Applies the input transformations to x.
-                    self.funcToGraph[8] = self.funcToGraph[8].replace("x", f"({xSF}*(x+{xTr}))")
+                    if "exp" in self.funcToGraph[8]:
+                        # Applies the input transformations to x.
+                        self.funcToGraph[8] = self.funcToGraph[8].replace("exp(x)", f"exp({xSF}*(x+{xTr}))")
+                        # Applies the input transformations to y.
+                        self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y+{yTr}))")
+                    else:
+                        # Applies the input transformations to y.
+                        self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y+{yTr}))")
+                        # Applies the input transformations to x.
+                        self.funcToGraph[8] = self.funcToGraph[8].replace("x", f"({xSF}*(x+{xTr}))")
+                    # Closes the current window.
+                    self.close()
+                    # Instantiates a new QDialog object.
+                    dialog = QDialog()
+                    # Instantiates a new functionWindow object.
+                    func = functionWindow()
+                    # Shows the window.
+                    func.show()
+                    # Calls the 2D graph plotting function.
+                    func.twoDimPlot(self.funcToGraph)
+                    # Executes the window.
+                    func.exec()
 
                 # Runs if the function is implicit.
                 case "Implicit":
@@ -1108,7 +1124,6 @@ class transformWindow(QDialog):
                     func = functionWindow()
                     # Shows the window.
                     func.show()
-                    print(self.funcToGraph)
                     # Calls the 3D graph plotting function.
                     func.implicitPlot(self.funcToGraph)
                     # Executes the window.
@@ -1141,6 +1156,9 @@ class functionWindow(QDialog):
         with open("../Stylesheets/navBarStylesheet.css", "r") as f:
             style = f.read()
             self.ui.funcNavBar.setStyleSheet(style)
+
+        # Sets up the home button.
+        self.ui.btnFuncWindowHome.clicked.connect(self.toHome)
 
     # Defines the function to plot 3d graphs.
     def threeDimPlot(self, funcToGraph):
@@ -1185,6 +1203,28 @@ class functionWindow(QDialog):
         self.ui.funcCanvas.draw()
         # Closes the implicit plot.
         plot1.close()
+
+    # Defines the 2D algebraic plot function
+    def twoDimPlot(self, funcToGraph):
+        # Tells sympy which symbols to use.
+        x, y = symbols("x, y")
+        # Converts the right hand side of the equation into a python expression.
+        rhs = sympify(funcToGraph[8])
+        # Converts this expression into a lambda function.
+        yFunc = lambdify(x, rhs, "numpy")
+        # Generates the x values to be plotted.
+        xVals = linspace(funcToGraph[2], funcToGraph[3], 100)
+        # Calculates the y values for the given x values
+        yVals = yFunc(xVals)
+        # Plots the values onto the canvas.
+        self.ui.funcCanvas.axes.plot(xVals, yVals)
+
+    # Defines the function to take the user to the home page.
+    def toHome(self):
+        # Closes the current window.
+        self.close()
+        # Shows the home page.
+        mainPage.show()
 
 # Runs the program if the file ran is the main file.
 if __name__ == "__main__":
