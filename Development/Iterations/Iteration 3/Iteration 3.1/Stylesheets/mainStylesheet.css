@@ -75,6 +75,10 @@ QTableView::item {
     border: 1px solid rgb(216, 216, 216);
 }
 
+QTableView::item:selected{
+    background-color: palette(highlight);
+}
+
 QTableView {
     background-color: white;
     border-radius: 3px;

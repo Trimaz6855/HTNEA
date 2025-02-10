@@ -8,7 +8,7 @@ from graphTransformation import Ui_graphTransformation
 from functionWindow import Ui_functionWindow
 
 # Importing PyQt for window functionality.
-from PyQt6.QtWidgets import QMainWindow, QApplication, QLineEdit, QMessageBox, QDialog, QFileDialog, QTableWidgetItem
+from PyQt6.QtWidgets import QMainWindow, QApplication, QLineEdit, QMessageBox, QDialog, QFileDialog, QTableWidgetItem, QTableView
 from PyQt6.QtGui import QIcon, QWindow
 from PyQt6.QtCore import Qt, QAbstractTableModel, QModelIndex, QSortFilterProxyModel
 
@@ -888,6 +888,8 @@ class catalogueWindow(QDialog):
         self.ui.txtCatSearch.textChanged.connect(self.proxyModel.setFilterRegularExpression)
         # Sets the tables data model.
         self.ui.tblCatFunctions.setModel(self.proxyModel)
+        # Sets it so an entire row is selected when clicked.
+        self.ui.tblCatFunctions.setSelectionBehavior(QTableView.SelectionBehavior(1))
 
         # Applies the stylesheet to the window.
         with open("../Stylesheets/mainStylesheet.css", "r") as f:
@@ -934,7 +936,6 @@ class catalogueWindow(QDialog):
             graphTWindow.show()
             # Executes the window.
             graphTWindow.exec()
-            print(funcToGraph)
 
 # Defines the function catalogue table model.
 class catalogueTableModel(QAbstractTableModel):
