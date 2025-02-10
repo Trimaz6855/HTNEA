@@ -1,0 +1,1 @@
+pyuic6 -x catalogueWindow.ui -o catalogueWindow.py
