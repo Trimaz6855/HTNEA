@@ -6,6 +6,7 @@ from dataWindow import Ui_dataWindow
 from catalogueWindow import Ui_catalogueWindow
 from graphTransformation import Ui_graphTransformation
 from functionWindow import Ui_functionWindow
+from savedGraphsWindow import Ui_savedGraphsWindow
 
 # Importing PyQt for window functionality.
 from PyQt6.QtWidgets import QMainWindow, QApplication, QLineEdit, QMessageBox, QDialog, QFileDialog, QTableWidgetItem, QTableView
@@ -25,7 +26,7 @@ from matplotlib import use
 import matplotlib.pyplot as plt
 
 # Importing sympy for graphing.
-from sympy import plot_implicit, plot, Eq, symbols, sympify, lambdify
+from sympy import plot_implicit, plot, Eq, symbols, sympify, lambdify, SympifyError
 from sympy.plotting import plot3d
 
 # Importing numpy.
@@ -117,7 +118,7 @@ class loginWindow(QDialog):#
                     # Displays a welcome message to the user.
                     QMessageBox.information(self, "Login Success!", f"Welcome, {loginUname}")
                     # Stores the users account.
-                    account.append(account)
+                    currentAccount.append(account)
                     # Sends the user to the home page.
                     self.toHome()
                 else:
@@ -432,6 +433,9 @@ class mainPage(QMainWindow):
         # Sets up the function catalogue button.
         self.ui.btnMainFunCat.clicked.connect(self.toFunCatalogue)
 
+        # Sets up the Implicit Function button.
+        self.ui.btnMainImplicit.clicked.connect(self.toImplicit)
+
     # Defines the function that takes the user to the login page.
     def toLogin(self):
         # Hides the main menu.
@@ -569,6 +573,23 @@ class mainPage(QMainWindow):
         catalogue.show()
         # Executes the catalogue window.
         catalogue.exec()
+
+    # Defines a function to take the user to the implicit graphing page.
+    def toImplicit(self):
+        # Hides the current window.
+        self.hide()
+        # Instantiates a new QDialog object.
+        dialog = QDialog()
+        # Instantiates a new instance of the functionWindow class.
+        func = functionWindow()
+        # Shows the function window.
+        func.show()
+        # Displays the implicit window of the function window.
+        func.ui.sWFuncWindow.setCurrentIndex(3)
+        # Sets the window title of the function window.
+        func.setWindowTitle("Graph Implicit Function")
+        # Executes the function window.
+        func.exec()
 
 # Defines the data window class.
 class dataWindow(QDialog):
@@ -1010,6 +1031,10 @@ class transformWindow(QDialog):
         # Sets up the graph button.
         self.ui.btnGTGraph.clicked.connect(self.graphClicked)
 
+        # Sets up the cancel button.
+        self.ui.btnGTCancel.clicked.connect(self.toHome)
+
+    # Defines the graph function.
     def graphClicked(self):
         # Temporarily stores the values in the text fields.
         xSF = self.ui.txtGTXSF.text()
@@ -1050,9 +1075,9 @@ class transformWindow(QDialog):
                 # Runs if the function is a 3D function.
                 case "3D":
                     # Applies the input transformations to x.
-                    self.funcToGraph[7] = self.funcToGraph[7].replace("x", f"({xSF}*(x-{xTr}))")
+                    self.funcToGraph[7] = self.funcToGraph[7].replace("x", f"((1/{xSF})*(x+{xTr}))")
                     # Applies the input transformations to x.
-                    self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y+{yTr}))")
+                    self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y-{yTr}))")
                     # Closes the current window.
                     self.close()
                     # Instantiates a new QDialog object.
@@ -1070,14 +1095,14 @@ class transformWindow(QDialog):
                 case "2D":
                     if "exp" in self.funcToGraph[8]:
                         # Applies the input transformations to x.
-                        self.funcToGraph[8] = self.funcToGraph[8].replace("exp(x)", f"exp({xSF}*(x+{xTr}))")
+                        self.funcToGraph[8] = self.funcToGraph[8].replace("exp(x)", f"exp((1/{xSF})*(x+{xTr}))")
                         # Applies the input transformations to y.
-                        self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y+{yTr}))")
+                        self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y-{yTr}))")
                     else:
                         # Applies the input transformations to y.
-                        self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y+{yTr}))")
+                        self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y-{yTr}))")
                         # Applies the input transformations to x.
-                        self.funcToGraph[8] = self.funcToGraph[8].replace("x", f"({xSF}*(x+{xTr}))")
+                        self.funcToGraph[8] = self.funcToGraph[8].replace("x", f"((1/{xSF})*(x+{xTr}))")
                     # Closes the current window.
                     self.close()
                     # Instantiates a new QDialog object.
@@ -1096,27 +1121,27 @@ class transformWindow(QDialog):
                     # Checks if x and y are both on the left side of the equation.
                     if "y" in self.funcToGraph[7] and "x" in self.funcToGraph[7]:
                         # Applies the input transformations to y.
-                        self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({xSF}*(y+{xTr}))")
+                        self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y-{yTr}))")
                         # Applies the input transformations to x.
-                        self.funcToGraph[7] = self.funcToGraph[7].replace("x", f"({xSF}*(x+{xTr}))")
+                        self.funcToGraph[7] = self.funcToGraph[7].replace("x", f"((1/{xSF})*(x+{xTr}))")
                     # Checks if y is on the left and x is on the right side of the equation.
                     elif "y" in self.funcToGraph[7] and "x" not in self.funcToGraph[7] and "x" in self.funcToGraph[8]:
                         # Applies the input transformations to y.
-                        self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({xSF}*(y+{xTr}))")
+                        self.funcToGraph[7] = self.funcToGraph[7].replace("y", f"({ySF}*(y-{yTr}))")
                         # Applies the input transformations to x.
-                        self.funcToGraph[8] = self.funcToGraph[8].replace("x", f"({xSF}*(x+{xTr}))")
+                        self.funcToGraph[8] = self.funcToGraph[8].replace("x", f"(1/({xSF})*(x+{xTr}))")
                     # Checks if y and x are on the right side of the equation.
                     elif "y" not in self.funcToGraph[7] and "x" in self.funcToGraph[8] and "y" in self.funcToGraph[8]:
                         # Applies the input transformations to y.
-                        self.funcToGraph[8] = self.funcToGraph[8].replace("y", f"({xSF}*(y+{xTr}))")
+                        self.funcToGraph[8] = self.funcToGraph[8].replace("y", f"({ySF}*(y-{yTr}))")
                         # Applies the input transformations to x.
-                        self.funcToGraph[8] = self.funcToGraph[8].replace("x", f"({xSF}*(x+{xTr}))")
+                        self.funcToGraph[8] = self.funcToGraph[8].replace("x", f"((1/{xSF})*(x+{xTr}))")
                     # Checks if y is on the right and x is on the left side of the equation.
                     elif "y" not in self.funcToGraph[7] and "y" in self.funcToGraph[8] and "x" not in self.funcToGraph[8] and "x" in self.funcToGraph[7]:
                         # Applies the input transformations to y.
-                        self.funcToGraph[8] = self.funcToGraph[8].replace("y", f"({xSF}*(y+{xTr}))")
+                        self.funcToGraph[8] = self.funcToGraph[8].replace("y", f"({ySF}*(y-{yTr}))")
                         # Applies the input transformations to x.
-                        self.funcToGraph[7] = self.funcToGraph[7].replace("x", f"({xSF}*(x+{xTr}))")
+                        self.funcToGraph[7] = self.funcToGraph[7].replace("x", f"((1/{xSF})*(x+{xTr}))")
                     # Closes the current window.
                     self.close()
                     # Instantiates a new QDialog object.
@@ -1129,6 +1154,13 @@ class transformWindow(QDialog):
                     func.implicitPlot(self.funcToGraph)
                     # Executes the window.
                     func.exec()
+
+    # Defines the function to take the user to the home page.
+    def toHome(self):
+        # Closes the current window.
+        self.close()
+        # Shows the main window.
+        mainPage.show()
 
 # Defines the function window class.
 class functionWindow(QDialog):
@@ -1161,8 +1193,21 @@ class functionWindow(QDialog):
         # Sets up the home button.
         self.ui.btnFuncWindowHome.clicked.connect(self.toHome)
 
+        # Sets up the save button.
+        self.ui.btnFuncWindowSave.clicked.connect(self.saveGraph)
+
+        ### Implicit Function Graphing Window.
+
+        # Sets up the Home button.
+        self.ui.btnImpHome.clicked.connect(self.toHome)
+
+        # Sets up the graph button.
+        self.ui.btnImpGraph.clicked.connect(self.implicitGraph)
+
     # Defines the function to plot 3d graphs.
     def threeDimPlot(self, funcToGraph):
+        # Stores the function as an attribute of the class.
+        self.funcToGraph = funcToGraph
         # Tells sympy which symbols are being used.
         x, y, z = symbols("x, y, z")
         # Converts the user's equation into a python function.
@@ -1190,6 +1235,8 @@ class functionWindow(QDialog):
 
     # Defines the function to plot implicit graphs.
     def implicitPlot(self, funcToGraph):
+        # Stores the function as an attribute of the class.
+        self.funcToGraph = funcToGraph
         # Tells sympy which symbols to use.
         x, y = symbols("x, y")
         # Converts the left hand side of the equation to a python expression.
@@ -1206,11 +1253,15 @@ class functionWindow(QDialog):
         self.ui.funcCanvas.draw()
         # Closes the implicit plot.
         plot1.close()
+        # Displays the function graph viewer.
+        self.ui.sWFuncWindow.setCurrentIndex(0)
         # Sets the window title.
         self.setWindowTitle("Implicit Graph Viewer")
 
     # Defines the 2D algebraic plot function
     def twoDimPlot(self, funcToGraph):
+        # Stores the function as an attribute of the class.
+        self.funcToGraph = funcToGraph
         # Tells sympy which symbols to use.
         x, y = symbols("x, y")
         # Converts the right hand side of the equation into a python expression.
@@ -1232,6 +1283,119 @@ class functionWindow(QDialog):
         self.close()
         # Shows the home page.
         mainPage.show()
+
+    # Defines the implicit graphing function.
+    def implicitGraph(self):
+        # Creates an array with the graph details entered by the user.
+        funcToGraph = ["Implicit", self.ui.txtImpXVar.text(), self.ui.txtImpXLb.text(), self.ui.txtImpXUb.text(), self.ui.txtImpYVar.text(), self.ui.txtImpYLb.text(),
+                        self.ui.txtImpYUb.text(), self.ui.txtImpLSide.text(), self.ui.txtImpRSide.text()]
+        # Checks none of the fields are empty.
+        for item in funcToGraph:
+            # Checks if the items are empty.
+            if item == "":
+                # Outputs an error message.
+                QMessageBox.critical(self, "Error", "Please complete all fields.")
+                return ValueError
+
+        # Checks that the entered lower and upper bounds are integers.
+        try:
+            funcToGraph[2] = float(funcToGraph[2])
+            funcToGraph[3] = float(funcToGraph[3])
+            funcToGraph[5] = float(funcToGraph[5])
+            funcToGraph[6] = float(funcToGraph[6])
+        # Catches a value error that occurs if they are not integers.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter numerical lower and upper bounds.")
+            return ValueError
+
+        # Checks the x and y variables are alphabetic strings.
+        if funcToGraph[1].isalpha() == True and funcToGraph[4].isalpha() == True:
+            # Temporarily stores the left and right sides of the equation.
+            lSide, rSide = funcToGraph[7], funcToGraph[8]
+            # Checks if the sides of the equation are valid.
+            try:
+                lSide = sympify(lSide)
+            except SympifyError:
+                # Outputs an error message to the user.
+                QMessageBox.critical(self, "Error", "Please enter a valid left hand side of your equation.")
+                return SympifyError
+            try:
+                rSide = sympify(rSide)
+            except SympifyError:
+                # Outputs an error message to the user.
+                QMessageBox.critical(self, "Error", "Please enter a right hand side of your equation.")
+                return SympifyError
+
+            # Creates and displays the implicit graph.
+            self.implicitPlot(funcToGraph)
+
+        # Runs if they are not alphabetic strings.
+        else:
+            QMessageBox.critical(self, "Error", "Please axis titles that are strings.")
+
+    # Defines the save graph function.
+    def saveGraph(self):
+
+        # Checks that the user is logged into an account.
+        if currentAccount == []:
+            # Outputs an error message
+            QMessageBox.critical(self, "Error", "Please login first.")
+            return exception("AccountError")
+
+        # Opens a connection with the database
+        conn = pyodbc.connect(conStr)
+        # Instantiates a cursor to navigate through the database.
+        cursor = conn.cursor()
+        # Checks what type of function the graph is of.
+        match self.funcToGraph[0]:
+            # Implicit function.
+            case "Implicit":
+                # Temporarily stores the sql command string.
+                command = f"INSERT INTO [Implicit Graphs] VALUES ({currentAccount[0][0]}, 'Implicit', '{self.funcToGraph[1]}', {self.funcToGraph[2]}, {self.funcToGraph[3]}, '{self.funcToGraph[4]}', {self.funcToGraph[5]}, {self.funcToGraph[6]}, '{self.funcToGraph[7]}', '{self.funcToGraph[8]}');"
+                # Executes the sql command inside the database.
+                cursor.execute(command)
+                # Commits the changes.
+                cursor.commit()
+                # Outputs a success message to the user.
+                QMessageBox.information(self, "Success", "Graph saved.")
+            # 2D Algebraic function.
+            case "2D":
+                # Temporarily stores the sql command string.
+                command = f"INSERT INTO [2D Algebraic Graphs] VALUES ({currentAccount[0][0]}, '2D', '{self.funcToGraph[1]}', {self.funcToGraph[2]}, {self.funcToGraph[3]}, '{self.funcToGraph[4]}', {self.funcToGraph[5]}, {self.funcToGraph[6]}, '{self.funcToGraph[7]}', '{self.funcToGraph[8]}');"
+                # Executes the sql command inside the database.
+                cursor.execute(command)
+                # Commits the changes.
+                cursor.commit()
+                # Outputs a success message to the user.
+                QMessageBox.information(self, "Success", "Graph saved.")
+            # 3D Algebraic function.
+            case "3D":
+                # Temporarily stores the sql command string.
+                command = f"INSERT INTO [3D Algebraic Graphs] VALUES ({currentAccount[0][0]}, '3D', '{self.funcToGraph[1]}', {self.funcToGraph[2]}, {self.funcToGraph[3]}, '{self.funcToGraph[4]}', {self.funcToGraph[5]}, {self.funcToGraph[6]}, '{self.funcToGraph[7]}');"
+                # Executes the sql command inside the database.
+                cursor.execute(command)
+                # Commits the changes.
+                cursor.commit()
+                # Outputs a success message to the user.
+                QMessageBox.information(self, "Success", "Graph saved.")
+        # Closes the database connection.
+        conn.close()
+
+# Defines the saved graphs window class.
+class savedGraphs(QDialog):
+    # Defines the constructor method.
+    def __init__(self, data):
+        # Accesses the parent class' constructor method.
+        super().__init__()
+        # Sets the ui attribute of the class to be an instance of the Ui_savedGraphsWindow class.
+        self.ui = Ui_savedGraphsWindow()
+        # Sets up the ui.
+        self.ui.setupUi(self)
+        # Sets it so an entire row is selected when clicked.
+        self.ui.tblCatFunctions.setSelectionBehavior(QTableView.SelectionBehavior(1))
+        # Stores the input data as an attribute.
+        self.data = data
 
 # Runs the program if the file ran is the main file.
 if __name__ == "__main__":
