@@ -436,6 +436,9 @@ class mainPage(QMainWindow):
         # Sets up the Implicit Function button.
         self.ui.btnMainImplicit.clicked.connect(self.toImplicit)
 
+        # Sets up the saved graphs button.
+        self.ui.btnMainSaved.clicked.connect(self.toSavedGraphs)
+
     # Defines the function that takes the user to the login page.
     def toLogin(self):
         # Hides the main menu.
@@ -590,6 +593,47 @@ class mainPage(QMainWindow):
         func.setWindowTitle("Graph Implicit Function")
         # Executes the function window.
         func.exec()
+
+    # Defines a function to take the user to the saved graphs page.
+    def toSavedGraphs(self):
+        # Tries to get the user's user Id.
+        try:
+            # Temporarily stores the users user Id.
+            uId = currentAccount[0][0]
+        except IndexError:
+            # Outputs an error message.
+            QMessageBox.critical(self, "Error", "Please login to view your saved graphs!")
+            return IndexError
+        # Hides the current window.
+        self.hide()
+        # Instantiates a new QDialog object.
+        dialog = QDialog()
+        # Opens a connection to the database.
+        conn = pyodbc.connect(conStr)
+        # Instantiates a cursor to navigate the database.
+        cursor = conn.cursor()
+        # Retrieves the graphs stored under the user's Id from the 2D graphs table.
+        cursor.execute(f"SELECT type, xTitle, xLb, xUb, yTitle, yLb, yUb, lEquation, rEquation FROM [2D Algebraic Graphs] WHERE uId={uId}")
+        # Temporarily stores the graphs fetched.
+        twoDim = cursor.fetchall()
+        # Retrieves the graphs stored under the user's Id from the 3D graphs table.
+        cursor.execute(f"SELECT type, xTitle, xLb, xUb, yTitle, yLb, yUb, rEquation FROM [3D Algebraic Graphs] WHERE uId={uId}")
+        # Temporarily stores the retrieved graphs.
+        threeDim = cursor.fetchall()
+        # Retrieves the graphs stored under the user's Id from the Implicit graphs table.
+        cursor.execute(f"SELECT type, xTitle, xLb, xUb, yTitle, yLb, yUb, lEquation, rEquation FROM [Implicit Graphs] WHERE uId={uId}")
+        # Temporarily stores the graphs fetched.
+        implicit = cursor.fetchall()
+        # Closes the database connection.
+        conn.close()
+        # Stores all of the retrieved graphs inside a list.
+        retrievedGraphs = twoDim + threeDim + implicit
+        # Instantiates a new instance of the savedGraphsWindow class.
+        saved = savedGraphs(retrievedGraphs)
+        # Shows the saved graph window.
+        saved.show()
+        # Executes the saved graph window.
+        saved.exec()
 
 # Defines the data window class.
 class dataWindow(QDialog):
@@ -1178,7 +1222,7 @@ class functionWindow(QDialog):
             self.setStyleSheet(style)
 
         # Instantiates the canvas widget.
-        self.ui.funcCanvas = graphCanvas(self, width=5, height=5, dpi=100)
+        self.ui.funcCanvas = graphCanvas(self, width=10, height=10, dpi=100)
         # Adds the canvas widget to the window.
         self.ui.lytFuncWindowCanvas.addWidget(self.ui.funcCanvas)
         # Instantiates the toolbar widget.
@@ -1247,6 +1291,11 @@ class functionWindow(QDialog):
         equation = Eq(lhs, rhs)
         # Creates an implict plot and adds it to the subplot.
         plot1 = plot_implicit(equation, (x, funcToGraph[2], funcToGraph[3]), (y, funcToGraph[5], funcToGraph[6]))
+        # Temporarily stores the axis of the plot.
+        ax = plot1.fig.axes[0]
+        # Reverses the axis labels on the plot.
+        ax.set_xlabel(funcToGraph[4], ha="right", va="top", rotation=0, labelpad=140)
+        ax.set_ylabel(funcToGraph[1], ha="right", rotation=0, labelpad=190)
         # Sets the figure of the canvas to be the figure of the implicit plot.
         self.ui.funcCanvas.figure = plot1.fig
         # Draws the changes to the canvas.
@@ -1393,9 +1442,138 @@ class savedGraphs(QDialog):
         # Sets up the ui.
         self.ui.setupUi(self)
         # Sets it so an entire row is selected when clicked.
-        self.ui.tblCatFunctions.setSelectionBehavior(QTableView.SelectionBehavior(1))
+        self.ui.tblSvdGraphs.setSelectionBehavior(QTableView.SelectionBehavior(1))
+        # Sets the window title.
+        self.setWindowTitle("Saved Graphs")
         # Stores the input data as an attribute.
         self.data = data
+        # Instantiates a new data model instance.
+        self.dataModel = savedTableModel(self.data)
+        # Instantiates a new proxy model instance.
+        self.proxyModel = QSortFilterProxyModel()
+        # Sets the proxy model to sort the data model.
+        self.proxyModel.setSourceModel(self.dataModel)
+        # Sets the case sensitivity of the proxy model's search.
+        self.proxyModel.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        # Sets the column to be sorted to be the equation column.
+        self.proxyModel.setFilterKeyColumn(6)
+        # Triggers the proxy model to be sorted whenever the search text input is changed.
+        self.ui.txtCatSearch.textChanged.connect(self.proxyModel.setFilterRegularExpression)
+        # Sets the data model of the table to be the proxy model.
+        self.ui.tblSvdGraphs.setModel(self.proxyModel)
+
+        # Adds the stylesheet to the window.
+        with open("../stylesheets/mainStylesheet.css", "r") as f:
+            style = f.read()
+            self.setStyleSheet(style)
+
+        # Sets up the home button.
+        self.ui.btnSvdHome.clicked.connect(self.toHome)
+
+        # Sets up the graph button.
+        self.ui.btnSvdLoad.clicked.connect(self.graph)
+
+    # Defines a function to take the user to the home page.
+    def toHome(self):
+        # Closes the current window.
+        self.close()
+        # Shows the main page.
+        mainPage.show()
+
+    # Defines a function to implement the graph button.
+    def graph(self):
+        # Checks the user has selected a row when the button is clicked.
+        selectedRow = self.ui.tblSvdGraphs.currentIndex().row()
+        # Checks if the user has not selected a row.
+        if selectedRow == -1:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please select a row.")
+            return IndexError
+        # Runs if the user has selected a row.
+        else:
+            # Creates a new list to store the function selected by the user.
+            funcToGraph = []
+            # Loops through the columns in the table for the row.
+            column = 0
+            while column <= 8:
+                # Appends the item in that column and row to the function list.
+                funcToGraph.append(self.proxyModel.index(selectedRow, column).data())
+                # Increments the column counter.
+                column += 1
+            # Closes the current window.
+            self.close()
+            # Instantiates a new QDialog object.
+            dialog = QDialog()
+            # Instantiates a new instance of the functionWindow class.
+            function = functionWindow()
+            # Checks what type of graph the user has selected.
+            match funcToGraph[0]:
+                # 2D Algebraic Graph.
+                case "2D":
+                    # Plots the function.
+                    function.twoDimPlot(funcToGraph)
+                # 3D Algebraic Graph.
+                case "3D":
+                    # Plots the function.
+                    function.threeDimPlot(funcToGraph)
+                # Implicit Graph.
+                case "Implicit":
+                    # Plots the function.
+                    function.implicitPlot(funcToGraph)
+            # Shows the function window.
+            function.show()
+            # Executes the function window.
+            function.exec()
+
+# Defines the saved graphs table data model.
+class savedTableModel(QAbstractTableModel):
+    # Defines the constructor method.
+    def __init__(self, data):
+        # Accesses the parent class constructor method.
+        super().__init__()
+        # Stores the input data as an attribute of the class.
+        self.data = data
+
+    # Defines a function to determine the number of rows that need to be added to the table.
+    def rowCount(self, parent=QModelIndex()):
+        # Tries to return the number of graphs inside the data 2D array.
+        try:
+            return len(self.data)
+        # Returns 0 as the base case if an error occurs.
+        except:
+            return 0
+
+    # Defines a function to determine the number of columns that need to be added to the table.
+    def columnCount(self, parent=QModelIndex()):
+        # Tries to return the length of the longest 1D array inside data.
+        try:
+            return len(max(self.data, key=len))
+        # Returns 0 as the base case if an error occurs.
+        except:
+            return 0
+
+    # Defines a function to add the headers to the table.
+    def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
+        # Temporarily stores the column headers needed for the table.
+        columnNames = ("Graph Type", "X Title", "X Lower Bound", "X Upper Bound", "Y Title", "Y Lower Bound", "Y Upper Bound", "Left Equation", "Right Equation")
+        # Checks that the header is a column header.
+        if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
+            # Returns the column header.
+            return "{}".format(columnNames[section])
+        elif orientation == Qt.Orientation.Vertical and role == Qt.ItemDataRole.DisplayRole:
+            # Returns the number row it is.
+            return "{}".format(section+1)
+
+    # Defines a function to add the data to the table.
+    def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+        # Only returns data for this specific role.
+        if role == Qt.ItemDataRole.DisplayRole:
+            # Tries to return the data for the column and row.
+            try:
+                return self.data[index.row()][index.column()]
+            # Returns a "-" if there is no data for that column and row.
+            except IndexError:
+                return "-"
 
 # Runs the program if the file ran is the main file.
 if __name__ == "__main__":

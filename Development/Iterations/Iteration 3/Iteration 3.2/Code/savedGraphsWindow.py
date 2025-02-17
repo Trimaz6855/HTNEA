@@ -13,6 +13,7 @@ class Ui_savedGraphsWindow(object):
     def setupUi(self, savedGraphsWindow):
         savedGraphsWindow.setObjectName("savedGraphsWindow")
         savedGraphsWindow.resize(800, 600)
+        savedGraphsWindow.setMinimumSize(QtCore.QSize(800, 600))
         savedGraphsWindow.setMaximumSize(QtCore.QSize(800, 600))
         self.tblSvdGraphs = QtWidgets.QTableView(parent=savedGraphsWindow)
         self.tblSvdGraphs.setGeometry(QtCore.QRect(39, 70, 721, 430))
