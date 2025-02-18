@@ -81,10 +81,10 @@
     <widget class="QWidget" name="gridLayoutWidget">
      <property name="geometry">
       <rect>
-       <x>120</x>
-       <y>100</y>
-       <width>561</width>
-       <height>561</height>
+       <x>80</x>
+       <y>90</y>
+       <width>641</width>
+       <height>611</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="lytFuncWindowCanvas"/>
