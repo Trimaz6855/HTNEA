@@ -1360,6 +1360,17 @@ class functionWindow(QDialog):
 
         # Checks the x and y variables are alphabetic strings.
         if funcToGraph[1].isalpha() == True and funcToGraph[4].isalpha() == True:
+            # Checks that the x-axis title is not longer than 1 character in length.
+            if len(funcToGraph[1]) != 1:
+                # Outputs an error message to the user.
+                QMessageBox.critical(self, "Error", "Please enter a valid x-axis title.")
+                return ValueError
+            # Checks that the y-axis title is not longer than 1 character in length.
+            elif len(funcToGraph[4]) != 1:
+                # Outputs an error message to the user.
+                QMessageBox.critical(self, "Error", "Please enter a valid y-axis title.")
+                return ValueError
+
             # Temporarily stores the left and right sides of the equation.
             lSide, rSide = funcToGraph[7], funcToGraph[8]
             # Checks if the sides of the equation are valid.
