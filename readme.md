@@ -11,8 +11,8 @@ My project is a graphical and scientific calculator.
     - Iteration 2.2 - CSV Importer. / Completed!
     - Iteration 2.3 - Random Data Graph. / Completed!
 - Iteration 3 - Function Graphing.
-    - Iteration 3.1 - Function Catalogue.
-    - Iteration 3.2 - Implicit Function Graphing and Saving.
+    - Iteration 3.1 - Function Catalogue. / Completed!
+    - Iteration 3.2 - Implicit Function Graphing and Saving. / Completed!
     - Iteration 3.3 - Algebraic Function Graphing and Saving (2D and 3D).
 - Iteration 4 - Statistical Functions.
     - Iteration 4.1 - Poisson Distribution.
