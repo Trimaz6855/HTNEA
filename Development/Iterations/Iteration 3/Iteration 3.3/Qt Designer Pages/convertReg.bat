@@ -1,0 +1,1 @@
+pyuic6 -x registration.ui -o registration.py

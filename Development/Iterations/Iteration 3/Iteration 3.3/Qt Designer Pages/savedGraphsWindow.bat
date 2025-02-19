@@ -1,0 +1,1 @@
+pyuic6 -x savedGraphsWindow.ui -o savedGraphsWindow.py

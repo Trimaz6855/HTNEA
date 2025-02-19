@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>functionWindow</class>
+ <widget class="QDialog" name="functionWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>720</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>720</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QStackedWidget" name="sWFuncWindow">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>801</width>
+     <height>711</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="graphViewer">
+    <widget class="QFrame" name="frameFuncWindowBar">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>801</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+     <widget class="QWidget" name="verticalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>631</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="lytfuncWindowBar"/>
+     </widget>
+     <widget class="QPushButton" name="btnFuncWindowSave">
+      <property name="geometry">
+       <rect>
+        <x>640</x>
+        <y>20</y>
+        <width>150</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="gridLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>90</y>
+       <width>641</width>
+       <height>611</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="lytFuncWindowCanvas"/>
+    </widget>
+    <widget class="QPushButton" name="btnFuncWindowHome">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>670</y>
+       <width>160</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Home</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="twoDimGraph"/>
+   <widget class="QWidget" name="threeDimGraph"/>
+   <widget class="QWidget" name="implicitGraph">
+    <widget class="QGraphicsView" name="gVImp">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>90</y>
+       <width>621</width>
+       <height>501</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpXVar">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>200</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Enter X Axis Title:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpYVar">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>200</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Y Axis Title:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpRSide">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>250</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Right Hand Side Of Equation:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpLSide">
+     <property name="geometry">
+      <rect>
+       <x>182</x>
+       <y>250</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Left Hand Side Of Equation:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpXUb">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>300</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter X Upper Bound:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpXLb">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>300</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Enter X Lower Bound:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpYUb">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>350</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Y Upper Bound:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpYLb">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>350</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Y Lower Bound:</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnImpGraph">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>480</y>
+       <width>160</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Graph</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnImpHome">
+     <property name="geometry">
+      <rect>
+       <x>440</x>
+       <y>480</y>
+       <width>160</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Home</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
