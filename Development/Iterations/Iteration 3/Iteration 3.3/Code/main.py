@@ -439,6 +439,12 @@ class mainPage(QMainWindow):
         # Sets up the saved graphs button.
         self.ui.btnMainSaved.clicked.connect(self.toSavedGraphs)
 
+        # Sets up the 2D Algebraic function button.
+        self.ui.btnMainAlgebraic.clicked.connect(self.toTwoDim)
+
+        # Sets up the 3D Algebraic function button.
+        self.ui.btnMain3D.clicked.connect(self.toThreeDim)
+
     # Defines the function that takes the user to the login page.
     def toLogin(self):
         # Hides the main menu.
@@ -634,6 +640,40 @@ class mainPage(QMainWindow):
         saved.show()
         # Executes the saved graph window.
         saved.exec()
+
+    # Defines a function to take the user to the 2D algebraic graphing page.
+    def toTwoDim(self):
+        # Hides the current window.
+        self.hide()
+        # Instantiates a new QDialog object.
+        dialog = QDialog()
+        # Instantiates a new functionWindow object.
+        func = functionWindow()
+        # Shows the function window object.
+        func.show()
+        # Changes the current widget to be the 2D graphing widget.
+        func.ui.sWFuncWindow.setCurrentIndex(2)
+        # Changes the window title.
+        func.setWindowTitle("Graph 2D Algebraic Function")
+        # Executes the function window object.
+        func.exec()
+
+    # Defines a function to take the user to the 3D algebraic graphing page.
+    def toThreeDim(self):
+        # Hides the current window.
+        self.hide()
+        # Instantiates a new QDialog object.
+        dialog = QDialog()
+        # Instantiates a new functionWindow object.
+        func = functionWindow()
+        # Shows the function window.
+        func.show()
+        # Changes the current widget to be the 3D graphing widget.
+        func.ui.sWFuncWindow.setCurrentIndex(1)
+        # Changes the window title.
+        func.setWindowTitle("Graph 3D Algebraic Function")
+        # Executes the function window object.
+        func.exec()
 
 # Defines the data window class.
 class dataWindow(QDialog):
@@ -1248,6 +1288,22 @@ class functionWindow(QDialog):
         # Sets up the graph button.
         self.ui.btnImpGraph.clicked.connect(self.implicitGraph)
 
+        ### 2D Function Graphing Window.
+
+        # Sets up the home button.
+        self.ui.btnTwoHome.clicked.connect(self.toHome)
+
+        # Sets up the graph button.
+        self.ui.btnTwoGraph.clicked.connect(self.twoDimGraph)
+
+        ### 3D Function Graphing Window.
+
+        # Sets up the home button.
+        self.ui.btnTriHome.clicked.connect(self.toHome)
+
+        # Sets up the graph button.
+        self.ui.btnTriGraph.clicked.connect(self.threeDimGraph)
+
     # Defines the function to plot 3d graphs.
     def threeDimPlot(self, funcToGraph):
         # Stores the function as an attribute of the class.
@@ -1274,6 +1330,8 @@ class functionWindow(QDialog):
         self.ui.funcCanvas.draw()
         # Removes the pre-existing 2D axis.
         fig.delaxes(fig.axes[0])
+        # Displays the graph viewer.
+        self.ui.sWFuncWindow.setCurrentIndex(0)
         # Sets the window title.
         self.setWindowTitle("3D Graph Viewer")
 
@@ -1323,6 +1381,16 @@ class functionWindow(QDialog):
         yVals = yFunc(xVals)
         # Plots the values onto the canvas.
         self.ui.funcCanvas.axes.plot(xVals, yVals)
+        # Draws the plot onto the canvas.
+        self.ui.funcCanvas.draw()
+        # Temporarily stores the axis of the plot.
+        ax = self.ui.funcCanvas.figure.axes[0]
+        # Changes the x-axis label to the value entered by the user.
+        ax.set_xlabel(funcToGraph[1])
+        # Changes the y-axis label to the value entered by the user.
+        ax.set_ylabel(funcToGraph[4])
+        # Displays the graph viewer.
+        self.ui.sWFuncWindow.setCurrentIndex(0)
         # Sets the window title.
         self.setWindowTitle("2D Graph Viewer")
 
@@ -1346,16 +1414,16 @@ class functionWindow(QDialog):
                 QMessageBox.critical(self, "Error", "Please complete all fields.")
                 return ValueError
 
-        # Checks that the entered lower and upper bounds are integers.
+        # Checks that the entered lower and upper bounds are floats.
         try:
             funcToGraph[2] = float(funcToGraph[2])
             funcToGraph[3] = float(funcToGraph[3])
             funcToGraph[5] = float(funcToGraph[5])
             funcToGraph[6] = float(funcToGraph[6])
-        # Catches a value error that occurs if they are not integers.
+        # Catches a value error that occurs if they are not floats.
         except ValueError:
             # Outputs an error message to the user.
-            QMessageBox.critical(self, "Error", "Please enter numerical lower and upper bounds.")
+            QMessageBox.critical(self, "Error", "Please enter numerical upper and lower bounds.")
             return ValueError
 
         # Checks the x and y variables are alphabetic strings.
@@ -1392,7 +1460,8 @@ class functionWindow(QDialog):
 
         # Runs if they are not alphabetic strings.
         else:
-            QMessageBox.critical(self, "Error", "Please axis titles that are strings.")
+            QMessageBox.critical(self, "Error", "Please enter axis titles that are strings.")
+            return ValueError
 
     # Defines the save graph function.
     def saveGraph(self):
@@ -1401,7 +1470,7 @@ class functionWindow(QDialog):
         if currentAccount == []:
             # Outputs an error message
             QMessageBox.critical(self, "Error", "Please login first.")
-            return exception("AccountError")
+            return Exception("AccountError")
 
         # Opens a connection with the database
         conn = pyodbc.connect(conStr)
@@ -1441,6 +1510,120 @@ class functionWindow(QDialog):
                 QMessageBox.information(self, "Success", "Graph saved.")
         # Closes the database connection.
         conn.close()
+
+    # Defines the 2D algebraic graph function.
+    def twoDimGraph(self):
+        # Creates an array for the function with the details entered by the user.
+        funcToGraph = ["2D", self.ui.txtTwoXVar.text(), self.ui.txtTwoXLb.text(), self.ui.txtTwoXUb.text(), self.ui.txtTwoYVar.text(),
+                       self.ui.txtTwoYLb.text(), self.ui.txtTwoYUb.text(), "y", self.ui.txtTwoRSide.text()]
+        # Checks that none of the fields are empty.
+        for item in funcToGraph:
+            if item == "":
+                # Outputs an error message to the user.
+                QMessageBox.critical(self, "Error", "Please complete all fields!")
+                return ValueError
+
+        # Checks that the x and y lower and upper bounds are floats.
+        try:
+            funcToGraph[2] = float(funcToGraph[2])
+            funcToGraph[3] = float(funcToGraph[3])
+            funcToGraph[5] = float(funcToGraph[5])
+            funcToGraph[6] = float(funcToGraph[6])
+        # Catches the error that occurs if any are not floats.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter numerical upper and lower bounds.")
+            return ValueError
+
+        # Checks that the x and y axes titles are alphabetic.
+        if funcToGraph[1].isalpha() == True and funcToGraph[4].isalpha() == True:
+            # Checks if the x-axis title is not 1 character in length.
+            if len(funcToGraph[1]) != 1:
+                # Outputs an error message to the user.
+                QMessageBox.critical(self, "Error", "Please enter a valid x-axis title.")
+                return ValueError
+            # Checks if the y-axis title is not 1 character in length.
+            elif len(funcToGraph[4]) != 1:
+                # Outputs an error message to the user.
+                QMessageBox.critical(self, "Error", "Please enter a valid y-axis title.")
+                return ValueError
+
+            # Temporarily stores the left and right sides of the equation.
+            lSide, rSide = funcToGraph[7], funcToGraph[8]
+            # Checks that the equation is valid.
+            try:
+                rSide = sympify(rSide)
+            # Catches the error that occurs if the equation is invalid.
+            except SympifyError:
+                # Outputs an error message to the user.
+                QMessageBox.critical(self, "Error", "Please enter a valid equation.")
+                return SympifyError
+
+            # Generates and displays the plot using the details entered by the user.
+            self.twoDimPlot(funcToGraph)
+
+        # Runs if the axis titles are not strings
+        else:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter axis titles that are strings.")
+
+    # Defines the 3D algebraic graph function.
+    def threeDimGraph(self):
+        # Temporarily stores the values entered by the user inside a list.
+        funcToGraph = ["3D", self.ui.txtTriXVar.text(), self.ui.txtTriXLb.text(), self.ui.txtTriXUb.text(), self.ui.txtTriYVar.text(),
+                       self.ui.txtTriYLb.text(), self.ui.txtTriYUb.text(), self.ui.txtTriRSide.text()]
+
+        # Checks that none of the fields are empty.
+        for item in funcToGraph:
+            if item == "":
+                # Outputs an error message to the user.
+                QMessageBox.critical(self, "Error", "Please complete all fields!")
+                return ValueError
+
+        # Checks that the x and y lower and upper bounds are floats.
+        try:
+            funcToGraph[2] = float(funcToGraph[2])
+            funcToGraph[3] = float(funcToGraph[3])
+            funcToGraph[5] = float(funcToGraph[5])
+            funcToGraph[6] = float(funcToGraph[6])
+        # Catches any errors caused by the bounds not being floats.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter numerical upper and lower bounds.")
+            return ValueError
+
+        # Checks that the x and y axes titles are alphabetic.
+        if funcToGraph[1].isalpha() == True and funcToGraph[4].isalpha() == True:
+            # Checks if the x-axis title is not 1 character in length.
+            if len(funcToGraph[1]) != 1:
+                # Outputs an error message.
+                QMessageBox.critical(self, "Error", "Please enter a valid x-axis title.")
+                return ValueError
+            # Checks if the y-axis title is not 1 character in length.
+            elif len(funcToGraph[4]) != 1:
+                # Outputs an error message to the user.
+                QMessageBox.critical(self, "Error", "Please enter a valid y-axis title.")
+                return ValueError
+
+            # Temporarily stores the equation entered by the user.
+            rSide = funcToGraph[7]
+            # Checks that the equation is valid.
+            try:
+                rSide = sympify(rSide)
+            # Catches an error caused by the equation being invalid.
+            except SympifyError:
+                # Outputs an error message to the user.
+                QMessageBox.critical(self, "Error", "Please enter a valid equation.")
+                return ValueError
+
+            # Plots the graph of the function.
+            self.threeDimPlot(funcToGraph)
+
+        # Runs if the titles are not alphabetic.
+        else:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter axis titles that are strings.")
+            return ValueError
 
 # Defines the saved graphs window class.
 class savedGraphs(QDialog):
