@@ -1,0 +1,60 @@
+QWidget {
+    background-color: deepskyblue;
+    color: black;
+}
+
+QGraphicsView {
+    background-color: white;
+    border-radius: 10px;
+    border: 2px solid rgb(216, 216, 216);
+}
+
+QLabel {
+    background-color: transparent;
+    color: black;
+    text-align: center;
+    font-size: 18px;
+}
+
+QPushButton {
+    background-color: skyblue;
+    border: 1px solid lightblue;
+    border-radius: 5px;
+    color: black;
+}
+
+QPushButton:hover{
+    border: lightskyblue 5px solid;
+    border-radius: 5px;
+    color: dodgerblue;
+    font-size: 14px;
+}
+
+QLabel#lblMainSci,QLabel#lblMainAcc {
+    background-color: white;
+    border-bottom: cornflowerblue 2px solid;
+    color: black;
+    text-align: center;
+}
+
+QPushButton#btnMainHome,QPushButton#btnMainFunCat,QPushButton#btnMainLogin,QPushButton#btnMainSciDrp,QPushButton#btnMainAccDrp,QPushButton#btnMainTrig,QPushButton#btnMainStats,QPushButton#btnMainSaved,QPushButton#btnMainLogout {
+    background-color: white;
+    border: 1px solid rgb(216, 216, 216);
+    color: black;
+    border-radius: 0;
+}
+
+QPushButton#btnMainHome:hover,QPushButton#btnMainFunCat:hover,QPushButton#btnMainLogin:hover,QPushButton#btnMainAccDrp:hover,QPushButton#btnMainSciDrp:hover,QPushButton#btnMainTrig:hover,QPushButton#btnMainStats:hover,QPushButton#btnMainSaved:hover,QPushButton#btnMainLogout:hover {
+    color: dodgerblue;
+    font-size: 13px;
+    border-radius: 0;
+}
+
+QPushButton#btnMainAccDrp,QPushButton#btnMainSciDrp {
+    border-radius: 0;
+}
+
+QPushButton#btnMainTrig,QPushButton#btnMainSaved,QPushButton#btnMainStats,QPushButton#btnMainLogout  {
+    border: 1px solid rgb(216, 216, 216);
+    border-radius: 0;
+}

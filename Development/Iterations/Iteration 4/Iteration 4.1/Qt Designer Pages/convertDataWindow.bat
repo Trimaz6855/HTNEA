@@ -1,0 +1,1 @@
+pyuic6 -x dataWindow.ui -o dataWindow.py
