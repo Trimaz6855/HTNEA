@@ -2001,11 +2001,11 @@ class statsWindow(QDialog):
             # Cumulative probability.
             case True:
                 # Calculates the probability.
-                binProb =  binProbability(binTrials, binSuccesses, binPValue)
+                binProb =  binCProbability(binTrials, binSuccesses, binPValue)
             # Non-cumulative probability.
             case False:
                 # Calculates the probability.
-                binProb = binCProbability(binTrials, binSuccesses, binPValue)
+                binProb = binProbability(binTrials, binSuccesses, binPValue)
         # Outputs the probability to the user.
         QMessageBox.information(self, "Probability", f"The calculated probability is {binProb}.")
 

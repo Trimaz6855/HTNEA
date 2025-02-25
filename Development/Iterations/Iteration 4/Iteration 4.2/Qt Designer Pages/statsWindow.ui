@@ -70,7 +70,7 @@
       <string>Poisson Probability Distribution</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btnStatsBCD">
+    <widget class="QPushButton" name="btnStatsBPD">
      <property name="geometry">
       <rect>
        <x>300</x>
@@ -109,7 +109,7 @@
       <string>Home</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btnStatsBPD">
+    <widget class="QPushButton" name="btnStatsBCD">
      <property name="geometry">
       <rect>
        <x>300</x>
@@ -135,10 +135,10 @@
     <zorder>gVStats</zorder>
     <zorder>lblStatsTitle</zorder>
     <zorder>btnStatsPPD</zorder>
-    <zorder>btnStatsBCD</zorder>
+    <zorder>btnStatsBPD</zorder>
     <zorder>btnStatsPCD</zorder>
     <zorder>btnStatsHome</zorder>
-    <zorder>btnStatsBPD</zorder>
+    <zorder>btnStatsBCD</zorder>
    </widget>
    <widget class="QWidget" name="statsBin">
     <widget class="QPushButton" name="btnBinCalc">

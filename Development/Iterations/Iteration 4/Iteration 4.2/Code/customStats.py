@@ -12,13 +12,25 @@ def factorial(n):
     # Checks if the value of n is negative.
     elif n < 0:
         # Returns a value error if n is negative.
-        return ValueError
+        return "Invalid n value"
     # Continues the recursion.
     else:
         return n * factorial(n-1)
 
 # Defines the combination function.
 def combination(binTrials, binSuccesses):
+    # Checks if the number of successes is negative.
+    if binSuccesses < 0:
+        # Returns an error message.
+        return "Invalid number of successes."
+    # Checks if the number of trials is negative.
+    elif binTrials < 0:
+        # Returns an error message.
+        return "Invalid number of trials."
+    # Checks if an invalid number of successes was entered for the number of trials.
+    elif binSuccesses > binTrials:
+        # Returns an error message.
+        return "Invalid combination."
     # Calculates the factorial of the number of successes.
     binSuccessesFac = factorial(binSuccesses)
     # Calculates the factorial of the number of trials.
@@ -88,3 +100,6 @@ def binCProbability(binTrials, binSuccesses, binPValue):
         count += 1
     # Returns the probability.
     return round(binTotalProb, 10)
+
+if __name__ == '__main__':
+    print(f"Value of -10!: {factorial(-10)}")
