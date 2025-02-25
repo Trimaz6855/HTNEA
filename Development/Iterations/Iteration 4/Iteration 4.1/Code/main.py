@@ -7,6 +7,7 @@ from catalogueWindow import Ui_catalogueWindow
 from graphTransformation import Ui_graphTransformation
 from functionWindow import Ui_functionWindow
 from savedGraphsWindow import Ui_savedGraphsWindow
+from statsWindow import Ui_statisticsWindow
 
 # Importing PyQt for window functionality.
 from PyQt6.QtWidgets import QMainWindow, QApplication, QLineEdit, QMessageBox, QDialog, QFileDialog, QTableWidgetItem, QTableView
@@ -31,6 +32,9 @@ from sympy.plotting import plot3d
 
 # Importing numpy.
 from numpy import polyfit, array, random, linspace, meshgrid, outer, ones
+
+# Imports the poisson probability functions from the stats python file.
+from customStats import poiProbability, poiCProbability
 
 # Sets the matplotlib backend to be used.
 use("QtAgg")
@@ -445,6 +449,9 @@ class mainPage(QMainWindow):
         # Sets up the 3D Algebraic function button.
         self.ui.btnMain3D.clicked.connect(self.toThreeDim)
 
+        # Sets up the statistics button.
+        self.ui.btnMainStats.clicked.connect(self.toStats)
+
     # Defines the function that takes the user to the login page.
     def toLogin(self):
         # Hides the main menu.
@@ -674,6 +681,19 @@ class mainPage(QMainWindow):
         func.setWindowTitle("Graph 3D Algebraic Function")
         # Executes the function window object.
         func.exec()
+
+    # Defines the function to take the user to the statistics window page.
+    def toStats(self):
+        # Hides the current window.
+        self.hide()
+        # Instantiates a new QDialog object.
+        dialog = QDialog()
+        # Instantiates a new object of the statsWindow class.
+        stats = statsWindow()
+        # Shows the window.
+        stats.show()
+        # Executes the window.
+        stats.exec()
 
 # Defines the data window class.
 class dataWindow(QDialog):
@@ -1768,6 +1788,117 @@ class savedTableModel(QAbstractTableModel):
             # Returns a "-" if there is no data for that column and row.
             except IndexError:
                 return "-"
+
+# Defines the statistics window class.
+class statsWindow(QDialog):
+    # Defines the constructor method.
+    def __init__(self):
+        # Accesses the parent class' constructor method.
+        super().__init__()
+        # Instantiates an object of the Ui_statisticsWindow class.
+        self.ui = Ui_statisticsWindow()
+        # Sets up the windows ui.
+        self.ui.setupUi(self)
+        # Sets the window title.
+        self.setWindowTitle("Statistical Functions")
+
+        # Applies the stylesheet to the page.
+        with open("../stylesheets/mainStylesheet.css", "r") as f:
+            style = f.read()
+            self.setStyleSheet(style)
+
+        ### Main stats page ###
+
+        # Sets up the home button.
+        self.ui.btnStatsHome.clicked.connect(self.toHome)
+        # Sets up the poisson probability distribution button.
+        self.ui.btnStatsPPD.clicked.connect(self.toPoiProb)
+        # Sets up the poisson cumulative probability distribution button.
+        self.ui.btnStatsPCD.clicked.connect(self.toPoiCProb)
+
+        ### Poisson distribution pages ###
+
+        # Defines an indicator to keep track of if the probability is cumulative or not.
+        self.ui.poiCumulative = False
+        # Sets up the cancel button.
+        self.ui.btnPoiCancel.clicked.connect(self.toHome)
+        # Sets up the calculate button.
+        self.ui.btnPoiCalculate.clicked.connect(self.poiCalculate)
+
+    # Defines a function to take the user to the home page.
+    def toHome(self):
+        # Closes the current window.
+        self.close()
+        # Shows the main window.
+        mainPage.show()
+
+    # Defines a function to take the user to the poisson probability distribution page.
+    def toPoiProb(self):
+        # Sets the probability to not be cumulative.
+        self.ui.poiCumulative = False
+        # Opens the poisson probability distribution widget.
+        self.ui.swStats.setCurrentIndex(2)
+        # Sets the window title.
+        self.setWindowTitle("Poisson Distribution")
+
+    # Defines a function to take the user to the poisson cumulative distribution page.
+    def toPoiCProb(self):
+        # Sets the probability to be cumulative.
+        self.ui.poiCumulative = True
+        # Opens the poisson probability distribution widget.
+        self.ui.swStats.setCurrentIndex(2)
+        # Sets the window title.
+        self.setWindowTitle("Poisson Cumulative Distribution")
+
+    # Defines the poisson calculate function.
+    def poiCalculate(self):
+        # Creates a variable to temporarily store the average rate entered by the user.
+        poiRate = self.ui.txtPoiRate.text()
+        # Creates a variable to temporarily store the number of successes entered by the user.
+        poiSuccesses = self.ui.txtPoiSuccesses.text()
+        # Checks if the average rate is empty.
+        if poiRate == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an average rate.")
+            return ValueError
+        # Checks if the number of successes is empty.
+        elif poiSuccesses == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter a number of successes.")
+            return ValueError
+        # Checks if the average rate is a float.
+        try:
+            poiRate = float(poiRate)
+        # Catches a value error.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter a numerical average rate.")
+            return ValueError
+        # Checks if the average rate is negative.
+        if poiRate < 0:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid average rate.")
+            return ValueError
+        # Checks if the number of successes is an integer.
+        try:
+            poiSuccesses = int(poiSuccesses)
+        # Catches a value error.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an integer number of successes.")
+            return ValueError
+        # Checks if the probability is cumulative.
+        match self.ui.poiCumulative:
+            # Cumulative probability.
+            case True:
+                # Calculates the probability.
+                poiProb = poiCProbability(poiSuccesses, poiRate)
+            # Non-cumulative probability.
+            case False:
+                # Calculates the probability.
+                poiProb = poiProbability(poiSuccesses, poiRate)
+        # Outputs the probability to the user.
+        QMessageBox.information(self, "Probability", f"The calculated probability is {poiProb}.")
 
 # Runs the program if the file ran is the main file.
 if __name__ == "__main__":
