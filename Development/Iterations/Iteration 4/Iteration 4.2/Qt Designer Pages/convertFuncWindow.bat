@@ -1,0 +1,1 @@
+pyuic6 -x functionWindow.ui -o functionWindow.py

@@ -1,0 +1,629 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>functionWindow</class>
+ <widget class="QDialog" name="functionWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>720</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>720</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QStackedWidget" name="sWFuncWindow">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>801</width>
+     <height>711</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="graphViewer">
+    <widget class="QFrame" name="frameFuncWindowBar">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>801</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+     <widget class="QWidget" name="verticalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>631</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="lytfuncWindowBar"/>
+     </widget>
+     <widget class="QPushButton" name="btnFuncWindowSave">
+      <property name="geometry">
+       <rect>
+        <x>640</x>
+        <y>20</y>
+        <width>150</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="gridLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>90</y>
+       <width>641</width>
+       <height>611</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="lytFuncWindowCanvas"/>
+    </widget>
+    <widget class="QPushButton" name="btnFuncWindowHome">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>670</y>
+       <width>160</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Home</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="threeDimGraph">
+    <widget class="QLineEdit" name="txtTriYUb">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>360</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Y Upper Bound:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtTriYVar">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>210</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Y Axis Title:</string>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="gVTri">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>90</y>
+       <width>621</width>
+       <height>501</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtTriYLb">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>360</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Y Lower Bound:</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnTriHome">
+     <property name="geometry">
+      <rect>
+       <x>440</x>
+       <y>490</y>
+       <width>160</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Home</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblTriLSide">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>260</y>
+       <width>171</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Z                       = </string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnTriGraph">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>490</y>
+       <width>160</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Graph</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtTriXLb">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>310</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Enter X Lower Bound:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtTriRSide">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>260</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Right Hand Side Of Equation:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtTriXVar">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>210</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Enter X Axis Title:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtTriXUb">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>310</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter X Upper Bound:</string>
+     </property>
+    </widget>
+    <zorder>gVTri</zorder>
+    <zorder>txtTriYUb</zorder>
+    <zorder>txtTriYVar</zorder>
+    <zorder>txtTriYLb</zorder>
+    <zorder>btnTriHome</zorder>
+    <zorder>lblTriLSide</zorder>
+    <zorder>btnTriGraph</zorder>
+    <zorder>txtTriXLb</zorder>
+    <zorder>txtTriRSide</zorder>
+    <zorder>txtTriXVar</zorder>
+    <zorder>txtTriXUb</zorder>
+   </widget>
+   <widget class="QWidget" name="twoDimGraph">
+    <widget class="QLineEdit" name="txtTwoYUb">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>360</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Y Upper Bound:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtTwoRSide">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>260</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Right Hand Side Of Equation:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtTwoYLb">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>360</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Y Lower Bound:</string>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="gVTwo">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>90</y>
+       <width>621</width>
+       <height>501</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnTwoHome">
+     <property name="geometry">
+      <rect>
+       <x>440</x>
+       <y>490</y>
+       <width>160</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Home</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtTwoXVar">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>210</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Enter X Axis Title:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtTwoXUb">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>310</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter X Upper Bound:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtTwoYVar">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>210</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Y Axis Title:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtTwoXLb">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>310</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Enter X Lower Bound:</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnTwoGraph">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>490</y>
+       <width>160</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Graph</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblTwoYEq">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>260</y>
+       <width>171</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Y                       = </string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+    <zorder>gVTwo</zorder>
+    <zorder>txtTwoYUb</zorder>
+    <zorder>txtTwoRSide</zorder>
+    <zorder>txtTwoYLb</zorder>
+    <zorder>btnTwoHome</zorder>
+    <zorder>txtTwoXVar</zorder>
+    <zorder>txtTwoXUb</zorder>
+    <zorder>txtTwoYVar</zorder>
+    <zorder>txtTwoXLb</zorder>
+    <zorder>btnTwoGraph</zorder>
+    <zorder>lblTwoYEq</zorder>
+   </widget>
+   <widget class="QWidget" name="implicitGraph">
+    <widget class="QGraphicsView" name="gVImp">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>90</y>
+       <width>621</width>
+       <height>501</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpXVar">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>200</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Enter X Axis Title:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpYVar">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>200</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Y Axis Title:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpRSide">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>250</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Right Hand Side Of Equation:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpLSide">
+     <property name="geometry">
+      <rect>
+       <x>182</x>
+       <y>250</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Left Hand Side Of Equation:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpXUb">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>300</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter X Upper Bound:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpXLb">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>300</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Enter X Lower Bound:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpYUb">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>350</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Y Upper Bound:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtImpYLb">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>350</y>
+       <width>200</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Y Lower Bound:</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnImpGraph">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>480</y>
+       <width>160</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Graph</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnImpHome">
+     <property name="geometry">
+      <rect>
+       <x>440</x>
+       <y>480</y>
+       <width>160</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Home</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>txtTriXVar</tabstop>
+  <tabstop>txtTriYVar</tabstop>
+  <tabstop>txtTriRSide</tabstop>
+  <tabstop>txtTriXLb</tabstop>
+  <tabstop>txtTriXUb</tabstop>
+  <tabstop>txtTriYLb</tabstop>
+  <tabstop>txtTriYUb</tabstop>
+  <tabstop>btnTriGraph</tabstop>
+  <tabstop>btnTriHome</tabstop>
+  <tabstop>txtTwoXVar</tabstop>
+  <tabstop>txtTwoYVar</tabstop>
+  <tabstop>txtTwoRSide</tabstop>
+  <tabstop>txtTwoXLb</tabstop>
+  <tabstop>txtTwoXUb</tabstop>
+  <tabstop>txtTwoYLb</tabstop>
+  <tabstop>txtTwoYUb</tabstop>
+  <tabstop>btnTwoGraph</tabstop>
+  <tabstop>btnTwoHome</tabstop>
+  <tabstop>txtImpXVar</tabstop>
+  <tabstop>txtImpYVar</tabstop>
+  <tabstop>txtImpLSide</tabstop>
+  <tabstop>txtImpRSide</tabstop>
+  <tabstop>txtImpXLb</tabstop>
+  <tabstop>txtImpXUb</tabstop>
+  <tabstop>txtImpYLb</tabstop>
+  <tabstop>txtImpYUb</tabstop>
+  <tabstop>btnImpGraph</tabstop>
+  <tabstop>btnImpHome</tabstop>
+  <tabstop>btnFuncWindowSave</tabstop>
+  <tabstop>btnFuncWindowHome</tabstop>
+  <tabstop>gVImp</tabstop>
+  <tabstop>gVTwo</tabstop>
+  <tabstop>gVTri</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
