@@ -36,6 +36,9 @@ from numpy import polyfit, array, random, linspace, meshgrid, outer, ones
 # Imports the poisson probability functions from the stats python file.
 from customStats import poiProbability, poiCProbability
 
+# Imports the binomial distribution functions from the stats python file.
+from customStats import binProbability, binCProbability
+
 # Sets the matplotlib backend to be used.
 use("QtAgg")
 
@@ -1815,6 +1818,10 @@ class statsWindow(QDialog):
         self.ui.btnStatsPPD.clicked.connect(self.toPoiProb)
         # Sets up the poisson cumulative probability distribution button.
         self.ui.btnStatsPCD.clicked.connect(self.toPoiCProb)
+        # Sets up the binomial probability distribution button.
+        self.ui.btnStatsBPD.clicked.connect(self.toBinProb)
+        # Sets up the binomial cumulative distribution button.
+        self.ui.btnStatsBCD.clicked.connect(self.toBinCProb)
 
         ### Poisson distribution pages ###
 
@@ -1824,6 +1831,15 @@ class statsWindow(QDialog):
         self.ui.btnPoiCancel.clicked.connect(self.toHome)
         # Sets up the calculate button.
         self.ui.btnPoiCalculate.clicked.connect(self.poiCalculate)
+
+        ### Binomial distribution pages ###
+
+        # Defines an indicator to keep track of if the probability is cumulative or not.
+        self.ui.binCumulative = False
+        # Sets up the home button.
+        self.ui.btnBinHome.clicked.connect(self.toHome)
+        # Sets up the calculate button.
+        self.ui.btnBinCalc.clicked.connect(self.binCalculate)
 
     # Defines a function to take the user to the home page.
     def toHome(self):
@@ -1899,6 +1915,99 @@ class statsWindow(QDialog):
                 poiProb = poiProbability(poiSuccesses, poiRate)
         # Outputs the probability to the user.
         QMessageBox.information(self, "Probability", f"The calculated probability is {poiProb}.")
+
+    # Defines a function to take the user to the binomial probability distribution page.
+    def toBinProb(self):
+        # Sets the probability to not be cumulative.
+        self.ui.binCumulative = False
+        # Opens the binomial probability window.
+        self.ui.swStats.setCurrentIndex(1)
+        # Sets the window title.
+        self.setWindowTitle("Binomial Probability Distribution")
+
+    # Defines a function to take the user to the binomial cumulative distribution page.
+    def toBinCProb(self):
+        # Sets the probability to be cumulative.
+        self.ui.binCumulative = True
+        # Opens the binomial cumulative probability window.
+        self.ui.swStats.setCurrentIndex(1)
+        # Sets the window title.
+        self.setWindowTitle("Binomial Cumulative Distribution")
+
+    # Defines the binomial calculate function.
+    def binCalculate(self):
+        # Creates a temporary variable to store the number of trials entered by the user.
+        binTrials = self.ui.txtBinTrials.text()
+        # Creates a temporary variable to store the probability of success entered by the user.
+        binPValue = self.ui.txtBinPValue.text()
+        # Creates a temporary variable to store the number of successes entered by the user.
+        binSuccesses = self.ui.txtBinSuccesses.text()
+        # Checks if the number of trials entered by the user is empty.
+        if binTrials == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter a number of trials.")
+            return ValueError
+        # Checks if the probability entered by the user is empty.
+        elif binPValue == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter a probability.")
+            return ValueError
+        # Checks if the number of successes entered by the user is empty.
+        elif binSuccesses == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter a number of successes.")
+            return ValueError
+        # Checks if the number of trials is an integer.
+        try:
+            binTrials = int(binTrials)
+        # Catches any value errors.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an integer number of trials.")
+            return ValueError
+        # Checks if the number of successes is an integer.
+        try:
+            binSuccesses = int(binSuccesses)
+        # Catches any value errors.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an integer number of successes.")
+            return ValueError
+        # Checks if the probability is a float.
+        try:
+            binPValue = float(binPValue)
+        # Catches any value errors.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter a valid probability.")
+            return ValueError
+        # Checks if the probability is less than 0.
+        if binPValue < 0:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid probability.")
+            return ValueError
+        # Checks if the probability is greater than 1.
+        elif binPValue > 1:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid probability.")
+            return ValueError
+        # Checks if the number of successes is greater than the number of trials entered.
+        if binSuccesses > binTrials:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid number of trials and successes.")
+            return ValueError
+        # Checks if the probability is cumulative.
+        match self.ui.binCumulative:
+            # Cumulative probability.
+            case True:
+                # Calculates the probability.
+                binProb =  binProbability(binTrials, binSuccesses, binPValue)
+            # Non-cumulative probability.
+            case False:
+                # Calculates the probability.
+                binProb = binCProbability(binTrials, binSuccesses, binPValue)
+        # Outputs the probability to the user.
+        QMessageBox.information(self, "Probability", f"The calculated probability is {binProb}.")
 
 # Runs the program if the file ran is the main file.
 if __name__ == "__main__":
