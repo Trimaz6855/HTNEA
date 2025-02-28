@@ -46,6 +46,9 @@ from CORDIC import CORDIC
 # Imports the angle conversion functions from the customTrig python file.
 from customTrig import toDeg, toRad, toGrad
 
+# Imports the inverse trigonometric functions from the math library.
+from math import asin, acos, atan
+
 # Sets the matplotlib backend to be used.
 use("QtAgg")
 
@@ -2044,6 +2047,8 @@ class trigWindow(QDialog):
         self.ui.setupUi(self)
         # Makes the current window the standard trigonometry window.
         self.ui.swTrigWindow.setCurrentIndex(0)
+        # Sets the window title.
+        self.setWindowTitle("Trigonometric Functions")
 
         # Applies the stylesheet to the window.
         with open("../Stylesheets/mainStylesheet.css", "r") as f:
@@ -2075,6 +2080,12 @@ class trigWindow(QDialog):
         # Sets up the home button.
         self.ui.btnTrigHome.clicked.connect(self.toHome)
 
+        # Sets up the shift button.
+        self.ui.btnTrigShift.clicked.connect(self.shift)
+
+        # Defines a variable to keep track of if the shift button has been clicked.
+        self.ui.trigShift = False
+
         ### Standard Trigonometry Page ###
 
         # Sets up the sine button.
@@ -2095,12 +2106,57 @@ class trigWindow(QDialog):
         # Sets up the cotangent button.
         self.ui.btnTrigCot.clicked.connect(self.cotangent)
 
+        ### Inverse Trigonometry Page ###
+
+        # Sets up the arcsine button.
+        self.ui.btnTrigASin.clicked.connect(self.arcsine)
+
+        # Sets up the arccosine button.
+        self.ui.btnTrigACos.clicked.connect(self.arccosine)
+
+        # Sets up the arctangent button.
+        self.ui.btnTrigATan.clicked.connect(self.arctangent)
+
+        # Sets up the arccosecant button.
+        self.ui.btnTrigACosec.clicked.connect(self.arccosecant)
+
+        # Sets up the arcsecant button.
+        self.ui.btnTrigASec.clicked.connect(self.arcsecant)
+
+        # Sets up the arccotangent button.
+        self.ui.btnTrigACot.clicked.connect(self.arccotangent)
+
     # Defines a function to take the user to the home page.
     def toHome(self):
         # Closes the current window.
         self.close()
         # Shows the main page.
         mainPage.show()
+
+    # Defines a function to change between the standard and inverse trigonometry windows.
+    def shift(self):
+        # Checks if the shift button has been clicked.
+        match self.ui.trigShift:
+            # The shift button has been clicked.
+            case True:
+                # Toggles the value of trigShift.
+                self.ui.trigShift = False
+                # Changes the current page to be the standard trigonometry page.
+                self.ui.swTrigWindow.setCurrentIndex(0)
+                # Changes the window title.
+                self.setWindowTitle("Trigonometric Functions")
+                # Changes the placeholder text of the input text box.
+                self.ui.txtTrigInput.setPlaceholderText("Input Angle:")
+            # The shift button has not been clicked.
+            case False:
+                # Toggles the value of trigShift.
+                self.ui.trigShift = True
+                # Changes the current page to the inverse trigonometry page.
+                self.ui.swTrigWindow.setCurrentIndex(1)
+                # Changes the window title.
+                self.setWindowTitle("Inverse Trigonometric Functions")
+                # Changes the placeholder text of the input text box.
+                self.ui.txtTrigInput.setPlaceholderText("Input Value:")
 
     # Defines a function
     def trigDrpdwn(self):
@@ -2209,6 +2265,8 @@ class trigWindow(QDialog):
                 self.ui.btnTrigRad.setGeometry(670, 78, 100, 30)
         # Changes the angle unit variable to gradians.
         self.ui.trigAngle = "Grad"
+
+    ### Standard Trigonometric Functions ###
 
     # Defines the sine function.
     def sine(self):
@@ -2432,6 +2490,67 @@ class trigWindow(QDialog):
             trigOutput = 1 / trigOutput[2]
         # Outputs the cotangent value.
         self.ui.txtTrigOutput.setText(str(trigOutput))
+
+    ### Inverse Trigonometric Functions ###
+
+    # Defines the arcsine function.
+    def arcsine(self):
+        # Temporarily stores the value input by the user.
+        trigInput = self.ui.txtTrigInput.text()
+        # Checks if the input value is empty.
+        if trigInput == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an angle.")
+            return ValueError
+        # Converts the input value is a number.
+        try:
+            # Converts the input value to a number.
+            trigInput = float(trigInput)
+        # Catches any value errors.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid angle.")
+            return ValueError
+        # Checks if the input value is greater than -1 and less than 1.
+        if trigInput >= -1 and trigInput <= 1:
+            # Calculates the arcsine of the input value.
+            trigOutput = asin(trigInput)
+            # Checks the angle unit.
+            match self.ui.trigAngle:
+                # The angle unit is degrees.
+                case "Deg":
+                    # Converts the angle into degrees.
+                    trigOutput = toDeg(trigOutput, "Rad")
+                # The angle unit is gradians.
+                case "Grad":
+                    # Converts the angle into gradians.
+                    trigOutput = toGrad(trigOutput, "Rad")
+        # If the input value is invalid.
+        else:
+            # Returns undefined.
+            trigOutput = "Undefined"
+        # Outputs the arcsine value.
+        self.ui.txtTrigOutput.setText(str(trigOutput))
+
+    # Defines the arccosine function.
+    def arccosine(self):
+        pass
+
+    # Defines the arctangent function.
+    def arctangent(self):
+        pass
+
+    # Defines the arccosecant function.
+    def arccosecant(self):
+        pass
+
+    # Defines the arcsecant function.
+    def arcsecant(self):
+        pass
+
+    # Defines the arccotangent function.
+    def arccotangent(self):
+        pass
 
 # Runs the program if the file ran is the main file.
 if __name__ == "__main__":

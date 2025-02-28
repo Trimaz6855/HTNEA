@@ -2044,6 +2044,8 @@ class trigWindow(QDialog):
         self.ui.setupUi(self)
         # Makes the current window the standard trigonometry window.
         self.ui.swTrigWindow.setCurrentIndex(0)
+        # Sets the window title.
+        self.setWindowTitle("Trigonometric Functions")
 
         # Applies the stylesheet to the window.
         with open("../Stylesheets/mainStylesheet.css", "r") as f:
