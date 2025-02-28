@@ -1,0 +1,1 @@
+pyuic6 -x trigWindow.ui -o trigWindow.py

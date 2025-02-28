@@ -8,6 +8,7 @@ from graphTransformation import Ui_graphTransformation
 from functionWindow import Ui_functionWindow
 from savedGraphsWindow import Ui_savedGraphsWindow
 from statsWindow import Ui_statisticsWindow
+from trigWindow import Ui_trigWindow
 
 # Importing PyQt for window functionality.
 from PyQt6.QtWidgets import QMainWindow, QApplication, QLineEdit, QMessageBox, QDialog, QFileDialog, QTableWidgetItem, QTableView
