@@ -1,0 +1,90 @@
+QWidget {
+    background-color: deepskyblue;
+    color: black;
+    /* font-family: "Monaco", "Lucida Console", Serif; */
+}
+
+QGraphicsView {
+    background-color: white;
+    border-radius: 10px;
+    border: 2px solid rgb(216, 216, 216);
+}
+
+QGraphicsView#gVDataWindowBar {
+    border-radius: 0;
+    background-color: gray;
+}
+
+QLabel {
+    background-color: transparent;
+    color: black;
+}
+
+QPushButton#btnLoginFPword {
+    border-width: 0;
+}
+
+QPushButton {
+    background-color: skyblue;
+    border: 1px solid cornflowerblue;
+    border-radius: 5px;
+    color: black;
+}
+
+QPushButton#btnDataWindowHome {
+    background-color: white;
+}
+
+QPushButton:hover{
+    border: lightskyblue 2px solid;
+    border-radius: 5px;
+    color: dodgerblue;
+    font-size: 13px;
+}
+
+QLineEdit {
+    background-color: white;
+    border-bottom: rgb(216, 216, 216) 2px solid;
+}
+
+QLineEdit:focus{
+    border-bottom: rgb(190, 190, 190) 2px solid;
+}
+
+QTableWidget {
+    background-color: white;
+    /* border: 2px solid rgb(216, 216, 216); */
+    border-radius: 3px;
+}
+
+QHeaderView {
+    background-color: white;
+    border: 1px solid rgb(216, 216, 216);
+}
+
+QTableWidget::item {
+    border: 1px solid rgb(216, 216, 216);
+}
+
+QTableCornerButton {
+    background-color: white;
+    border: 1px solid rgb(216, 216, 216);
+}
+
+QTableView::item {
+    border: 1px solid rgb(216, 216, 216);
+}
+
+QTableView::item:selected{
+    background-color: palette(highlight);
+}
+
+QTableView {
+    background-color: white;
+    border-radius: 3px;
+}
+
+QPushButton#btnTrigDrpdwn {
+    background-color: transparent;
+    border-color: transparent;
+}

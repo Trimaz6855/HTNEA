@@ -1,0 +1,1 @@
+pyuic6 -x statsWindow.ui -o statsWindow.py
