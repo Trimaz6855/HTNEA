@@ -35,7 +35,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="standardTrig">
     <widget class="QGraphicsView" name="gVTrigStandard">
@@ -300,7 +300,7 @@
    <property name="geometry">
     <rect>
      <x>670</x>
-     <y>46</y>
+     <y>49</y>
      <width>100</width>
      <height>30</height>
     </rect>
@@ -313,7 +313,7 @@
    <property name="geometry">
     <rect>
      <x>670</x>
-     <y>72</y>
+     <y>78</y>
      <width>100</width>
      <height>30</height>
     </rect>
@@ -378,6 +378,9 @@
      <width>200</width>
      <height>30</height>
     </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
    </property>
    <property name="placeholderText">
     <string>Output Angle:</string>

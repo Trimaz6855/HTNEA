@@ -83,3 +83,8 @@ QTableView {
     background-color: white;
     border-radius: 3px;
 }
+
+QPushButton#btnTrigDrpdwn {
+    background-color: transparent;
+    border-color: transparent;
+}

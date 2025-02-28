@@ -97,10 +97,10 @@ class Ui_trigWindow(object):
         self.btnTrigDeg.setGeometry(QtCore.QRect(670, 20, 100, 30))
         self.btnTrigDeg.setObjectName("btnTrigDeg")
         self.btnTrigRad = QtWidgets.QPushButton(parent=trigWindow)
-        self.btnTrigRad.setGeometry(QtCore.QRect(670, 46, 100, 30))
+        self.btnTrigRad.setGeometry(QtCore.QRect(670, 49, 100, 30))
         self.btnTrigRad.setObjectName("btnTrigRad")
         self.btnTrigGrad = QtWidgets.QPushButton(parent=trigWindow)
-        self.btnTrigGrad.setGeometry(QtCore.QRect(670, 72, 100, 30))
+        self.btnTrigGrad.setGeometry(QtCore.QRect(670, 78, 100, 30))
         self.btnTrigGrad.setObjectName("btnTrigGrad")
         self.btnTrigDrpdwn = QtWidgets.QPushButton(parent=trigWindow)
         self.btnTrigDrpdwn.setGeometry(QtCore.QRect(740, 23, 31, 24))
@@ -116,10 +116,11 @@ class Ui_trigWindow(object):
         self.txtTrigInput.setObjectName("txtTrigInput")
         self.txtTrigOutput = QtWidgets.QLineEdit(parent=trigWindow)
         self.txtTrigOutput.setGeometry(QtCore.QRect(540, 350, 200, 30))
+        self.txtTrigOutput.setReadOnly(True)
         self.txtTrigOutput.setObjectName("txtTrigOutput")
 
         self.retranslateUi(trigWindow)
-        self.swTrigWindow.setCurrentIndex(1)
+        self.swTrigWindow.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(trigWindow)
 
     def retranslateUi(self, trigWindow):

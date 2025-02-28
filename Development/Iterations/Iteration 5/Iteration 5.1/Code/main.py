@@ -40,6 +40,12 @@ from customStats import poiProbability, poiCProbability
 # Imports the binomial distribution functions from the stats python file.
 from customStats import binProbability, binCProbability
 
+# Imports the cordic algorithm from the cordic python file.
+from CORDIC import CORDIC
+
+# Imports the angle conversion functions from the customTrig python file.
+from customTrig import toDeg, toRad, toGrad
+
 # Sets the matplotlib backend to be used.
 use("QtAgg")
 
@@ -456,6 +462,9 @@ class mainPage(QMainWindow):
         # Sets up the statistics button.
         self.ui.btnMainStats.clicked.connect(self.toStats)
 
+        # Sets up the trigonometry button.
+        self.ui.btnMainTrig.clicked.connect(self.toTrig)
+
     # Defines the function that takes the user to the login page.
     def toLogin(self):
         # Hides the main menu.
@@ -698,6 +707,19 @@ class mainPage(QMainWindow):
         stats.show()
         # Executes the window.
         stats.exec()
+
+    # Defines the function to take the user to the trigonometry page.
+    def toTrig(self):
+        # Hides the main window.
+        self.hide()
+        # Instantiates a new QDialog object.
+        dialog = QDialog()
+        # Instantiates a new instance of the trigWindow class.
+        trig = trigWindow()
+        # Shows the trig window.
+        trig.show()
+        # Executes the trig window.
+        trig.exec()
 
 # Defines the data window class.
 class dataWindow(QDialog):
@@ -2009,6 +2031,407 @@ class statsWindow(QDialog):
                 binProb = binProbability(binTrials, binSuccesses, binPValue)
         # Outputs the probability to the user.
         QMessageBox.information(self, "Probability", f"The calculated probability is {binProb}.")
+
+# Defines the trigonometry window class.
+class trigWindow(QDialog):
+    # Defines the constructor method.
+    def __init__(self):
+        # Accesses the parent class constructor method.
+        super().__init__()
+        # Instantiates a new instance of the Ui_trigWindow() class.
+        self.ui = Ui_trigWindow()
+        # Sets up the user interface.
+        self.ui.setupUi(self)
+        # Makes the current window the standard trigonometry window.
+        self.ui.swTrigWindow.setCurrentIndex(0)
+
+        # Applies the stylesheet to the window.
+        with open("../Stylesheets/mainStylesheet.css", "r") as f:
+            style = f.read()
+            self.setStyleSheet(style)
+
+        # Defines a variable to keep track of whether the angle unit dropdown menu has been toggled.
+        self.ui.trigAngleDrpdwn = False
+
+        # Makes the radian and gradian buttons invisible.
+        self.ui.btnTrigRad.setVisible(False)
+        self.ui.btnTrigGrad.setVisible(False)
+
+        # Sets up the angle unit dropdown button.
+        self.ui.btnTrigDrpdwn.clicked.connect(self.trigDrpdwn)
+
+        # Defines a variable to keep track of the angle unit selected by the user, defaults to degrees.
+        self.ui.trigAngle = "Deg"
+
+        # Sets up the degrees button.
+        self.ui.btnTrigDeg.clicked.connect(self.degrees)
+
+        # Sets up the radians button.
+        self.ui.btnTrigRad.clicked.connect(self.radians)
+
+        # Sets up the gradians button.
+        self.ui.btnTrigGrad.clicked.connect(self.gradians)
+
+        # Sets up the home button.
+        self.ui.btnTrigHome.clicked.connect(self.toHome)
+
+        ### Standard Trigonometry Page ###
+
+        # Sets up the sine button.
+        self.ui.btnTrigSin.clicked.connect(self.sine)
+
+        # Sets up the cosine button.
+        self.ui.btnTrigCos.clicked.connect(self.cosine)
+
+        # Sets up the tangent button.
+        self.ui.btnTrigTan.clicked.connect(self.tangent)
+
+        # Sets up the cosecant button.
+        self.ui.btnTrigCosec.clicked.connect(self.cosecant)
+
+        # Sets up the secant button.
+        self.ui.btnTrigSec.clicked.connect(self.secant)
+
+        # Sets up the cotangent button.
+        self.ui.btnTrigCot.clicked.connect(self.cotangent)
+
+    # Defines a function to take the user to the home page.
+    def toHome(self):
+        # Closes the current window.
+        self.close()
+        # Shows the main page.
+        mainPage.show()
+
+    # Defines a function
+    def trigDrpdwn(self):
+        # Checks whether the angle unit dropdown has been toggled.
+        match self.ui.trigAngleDrpdwn:
+            # Dropdown has been toggled.
+            case False:
+                # Changes the value of the angle unit dropdown variable.
+                self.ui.trigAngleDrpdwn = True
+                # Checks which angle unit is currently selected.
+                match self.ui.trigAngle:
+                    # The currently selected angle unit is degrees.
+                    case "Deg":
+                        # Makes the radian and gradian buttons visible.
+                        self.ui.btnTrigRad.setVisible(True)
+                        self.ui.btnTrigGrad.setVisible(True)
+                    # The currently selected angle unit is gradians.
+                    case "Rad":
+                        # Makes the gradian and degrees buttons visible.
+                        self.ui.btnTrigGrad.setVisible(True)
+                        self.ui.btnTrigDeg.setVisible(True)
+                    # The currently selected angle unit is radians.
+                    case "Grad":
+                        # Makes the degrees and radian buttons visible.
+                        self.ui.btnTrigRad.setVisible(True)
+                        self.ui.btnTrigDeg.setVisible(True)
+                # Changes the direction of the dropdown arrow.
+                self.ui.btnTrigDrpdwn.setText("^")
+            # Dropdown has not been toggled.
+            case True:
+                # Changes the value of the angle unit dropdown variable.
+                self.ui.trigAngleDrpdwn = False
+                # Checks which angle unit is currently selected.
+                match self.ui.trigAngle:
+                    # The currently selected angle unit is degrees.
+                    case "Deg":
+                        # Makes the radian and gradian buttons visible.
+                        self.ui.btnTrigRad.setVisible(False)
+                        self.ui.btnTrigGrad.setVisible(False)
+                    # The currently selected angle unit is gradians.
+                    case "Rad":
+                        # Makes the gradian and degrees buttons visible.
+                        self.ui.btnTrigGrad.setVisible(False)
+                        self.ui.btnTrigDeg.setVisible(False)
+                    # The currently selected angle unit is radians.
+                    case "Grad":
+                        # Makes the degrees and radian buttons visible.
+                        self.ui.btnTrigRad.setVisible(False)
+                        self.ui.btnTrigDeg.setVisible(False)
+                # Changes the direction of the dropdown arrow.
+                self.ui.btnTrigDrpdwn.setText("v")
+
+    # Defines the function to change the angle unit to degrees.
+    def degrees(self):
+        # Checks the currently selected angle unit.
+        match self.ui.trigAngle:
+            # The angle unit is radians.
+            case "Rad":
+                # Moves the degrees button to the top position.
+                self.ui.btnTrigDeg.setGeometry(670, 20, 100, 30)
+                # Moves the radians button to a position within the dropdown menu.
+                self.ui.btnTrigRad.setGeometry(670, 49, 100, 30)
+            # The angle unit is gradians.
+            case "Grad":
+                # Moves the degrees button to the top position.
+                self.ui.btnTrigDeg.setGeometry(670, 20, 100, 30)
+                # Moves the gradians button to a position within the dropdown menu.
+                self.ui.btnTrigGrad.setGeometry(670, 78, 100, 30)
+        # Changes the angle unit variable to degrees.
+        self.ui.trigAngle = "Deg"
+
+    # Defines the function to change the angle unit to radians.
+    def radians(self):
+        # Checks the currently selected angle unit.
+        match self.ui.trigAngle:
+            # The angle unit is degrees.
+            case "Deg":
+                # Moves the radians button to the top position.
+                self.ui.btnTrigRad.setGeometry(670, 20, 100, 30)
+                # Moves the degrees button to a position within the dropdown menu.
+                self.ui.btnTrigDeg.setGeometry(670, 49, 100, 30)
+            # The angle unit is gradians.
+            case "Grad":
+                # Moves the radians button to the top position.
+                self.ui.btnTrigRad.setGeometry(670, 20, 100, 30)
+                # Moves the gradians button to a position within the dropdown menu.
+                self.ui.btnTrigGrad.setGeometry(670, 78, 100, 30)
+        # Changes the angle unit variable to radians.
+        self.ui.trigAngle = "Rad"
+
+    # Defines the function to change the angle unit to gradians.
+    def gradians(self):
+        # Checks the currently selected angle unit.
+        match self.ui.trigAngle:
+            # The angle unit is degrees.
+            case "Deg":
+                # Moves the gradians button to the top position.
+                self.ui.btnTrigGrad.setGeometry(670, 20, 100, 30)
+                # Moves the degrees button to a position within the dropdown menu.
+                self.ui.btnTrigDeg.setGeometry(670, 78, 100, 30)
+            # The angle unit is radians.
+            case "Rad":
+                # Moves the gradians button to the top position.
+                self.ui.btnTrigGrad.setGeometry(670, 20, 100, 30)
+                # Moves the radians button to a position within the dropdown menu.
+                self.ui.btnTrigRad.setGeometry(670, 78, 100, 30)
+        # Changes the angle unit variable to gradians.
+        self.ui.trigAngle = "Grad"
+
+    # Defines the sine function.
+    def sine(self):
+        # Temporarily stores the angle input by the user.
+        trigInput = self.ui.txtTrigInput.text()
+        # Checks if the input is empty.
+        if trigInput == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an angle.")
+            return ValueError
+        # Checks if the input angle is a number.
+        try:
+            # Converts the angle to a number.
+            trigInput = float(trigInput)
+        # Handles any value errors.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid angle.")
+            return ValueError
+        # Checks the input angle unit.
+        match self.ui.trigAngle:
+            # The angle unit is degrees.
+            case "Deg":
+                # Converts the angle into radians.
+                trigInput = toRad(trigInput, "Deg")
+            # The angle unit is gradians.
+            case "Grad":
+                # Converts the angle into radians.
+                trigInput = toRad(trigInput, "Grad")
+        # Calculates the CORDIC value for the input angle.
+        trigOutput = CORDIC(trigInput)
+        # Outputs the sine value.
+        self.ui.txtTrigOutput.setText(str(trigOutput[1]))
+
+    # Defines the cosine function.
+    def cosine(self):
+        # Temporarily stores the angle input by the user.
+        trigInput = self.ui.txtTrigInput.text()
+        # Checks if the input is empty.
+        if trigInput == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an angle.")
+            return ValueError
+        # Checks if the input angle is a number.
+        try:
+            # Converts the input angle to a number.
+            trigInput = float(trigInput)
+        # Catches any value errors.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid angle.")
+            return ValueError
+        # Checks the input angle unit.
+        match self.ui.trigAngle:
+            # The angle unit is degrees.
+            case "Deg":
+                # Converts the angle into radians.
+                trigInput = toRad(trigInput, "Deg")
+            # The angle unit is gradians.
+            case "Grad":
+                # Converts the angle into radians.
+                trigInput = toRad(trigInput, "Grad")
+        # Calculates the CORDIC value for the input angle.
+        trigOutput = CORDIC(trigInput)
+        # Outputs the cosine value.
+        self.ui.txtTrigOutput.setText(str(trigOutput[0]))
+
+    # Defines the tangent function.
+    def tangent(self):
+        # Temporarily stores the angle input by the user.
+        trigInput = self.ui.txtTrigInput.text()
+        # Checks if the input is empty.
+        if trigInput == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an angle.")
+            return ValueError
+        # Checks if the input angle is a number.
+        try:
+            # Converts the input angle to a number.
+            trigInput = float(trigInput)
+        # Catches any value errors.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid angle.")
+            return ValueError
+        # Checks the input angle unit.
+        match self.ui.trigAngle:
+            # The input angle unit is degrees.
+            case "Deg":
+                # Converts the angle into radians.
+                trigInput = toRad(trigInput, "Deg")
+            # The input angle unit is gradians.
+            case "Grad":
+                # Converts the angle into gradians.
+                trigInput = toRad(trigInput, "Grad")
+        # Calculates the tangent value for the input angle.
+        trigOutput = CORDIC(trigInput)
+        # Outputs the tangent value.
+        self.ui.txtTrigOutput.setText(str(trigOutput[2]))
+
+    # Defines the cosecant function.
+    def cosecant(self):
+        # Temporarily stores the angle input by the user.
+        trigInput = self.ui.txtTrigInput.text()
+        # Checks if the input angle is empty.
+        if trigInput == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an angle.")
+            return ValueError
+        # Checks if the input angle is a number.
+        try:
+            # Converts the angle to a number.
+            trigInput = float(trigInput)
+        # Catches any value errors.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid angle.")
+            return ValueError
+        # Checks the input angle unit.
+        match self.ui.trigAngle:
+            # The input angle unit is degrees.
+            case "Deg":
+                # Converts the angle into radians.
+                trigInput = toRad(trigInput, "Deg")
+            # The input angle unit is gradians.
+            case "Grad":
+                # Converts the angle into radians.
+                trigInput = toRad(trigInput, "Grad")
+        # Calculates the sine value for the input angle.
+        trigOutput = CORDIC(trigInput)
+        # Tries to calculate the cosecant value.
+        try:
+            trigOutput = 1 / trigOutput[1]
+        # Catches any zero division errors.
+        except ZeroDivisionError:
+            # Returns undefined.
+            trigOutput = "Undefined"
+        # Outputs the cosecant value.
+        self.ui.txtTrigOutput.setText(str(trigOutput))
+
+    # Defines the secant function.
+    def secant(self):
+        # Temporarily stores the angle input by the user.
+        trigInput = self.ui.txtTrigInput.text()
+        # Checks if the input is empty.
+        if trigInput == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an angle.")
+            return ValueError
+        # Checks if the input angle is a number.
+        try:
+            # Converts the input angle to a number.
+            trigInput = float(trigInput)
+        # Catches any value errors.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid angle.")
+            return ValueError
+        # Checks the input angle unit.
+        match self.ui.trigAngle:
+            # The input angle unit is degrees.
+            case "Deg":
+                # Converts the input angle into radians.
+                trigInput = toRad(trigInput, "Deg")
+            # The input angle unit is gradians.
+            case "Grad":
+                # Converts the input angle into radians.
+                trigInput = toRad(trigInput, "Grad")
+        # Calculates the cosine value using the cordic algorithm.
+        trigOutput = CORDIC(trigInput)
+        # Tries to calculate the secant value.
+        try:
+            trigOutput = 1 / trigOutput[0]
+        # Catches any zero division errors.
+        except ZeroDivisionError:
+            # Returns undefined.
+            trigOutput = "Undefined"
+        # Outputs the secant value.
+        self.ui.txtTrigOutput.setText(str(trigOutput))
+
+    # Defines the cotangent function.
+    def cotangent(self):
+        # Temporarily stores the angle input by the user.
+        trigInput = self.ui.txtTrigInput.text()
+        # Checks if the input is empty.
+        if trigInput == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an angle.")
+            return ValueError
+        # Checks if the input angle is a number.
+        try:
+            # Converts the input angle to a number.
+            trigInput = float(trigInput)
+        # Catches any value errors.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid angle.")
+            return ValueError
+        # Checks the input angle unit.
+        match self.ui.trigAngle:
+            # The input angle unit is degrees.
+            case "Deg":
+                # Converts the input angle into radians.
+                trigInput = toRad(trigInput, "Deg")
+            # The input angle is gradians.
+            case "Grad":
+                # Converts the input angle into gradians.
+                trigInput = toRad(trigInput, "Grad")
+        # Calculates the tangent value using the cordic algorithm.
+        trigOutput = CORDIC(trigInput)
+        # Checks if the tangent value is undefined.
+        if trigOutput[2] == "Undefined":
+            # Returns 0.
+            trigOutput = 0
+        # Checks if the tangent value is 0.
+        elif trigOutput[2] == 0:
+            # Returns undefined.
+            trigOutput = "Undefined"
+        else:
+            # Calculates the cotangent value.
+            trigOutput = 1 / trigOutput[2]
+        # Outputs the cotangent value.
+        self.ui.txtTrigOutput.setText(str(trigOutput))
 
 # Runs the program if the file ran is the main file.
 if __name__ == "__main__":

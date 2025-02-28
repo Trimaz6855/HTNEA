@@ -102,15 +102,16 @@ def CORDIC(theta):
         # Terminates the function by returning the error.
         return UnboundLocalError
 
+    # Rounds the sine and cosine values.
+    sine = round(sine, 10)
+    cosine = round(cosine, 10)
+
     # Checks if the cosine value
     if (theta%(pi/2)) == 0 and (theta%(pi)) != 0:
+        # Defines tangent as undefined to avoid a zero division error.
         tangent = "Undefined"
-        cosine = 0
-    elif round(cosine, 10) == 1 or round(cosine, 10) == -1:
-        tangent = 0
-        sine = 0
-        cosine = round(cosine, 10)
     else:
+        # Calculates the tangent value for the sine and cosine values
          tangent = sine / cosine
 
     # Returns the coordinates adjusted by the scaling factor
