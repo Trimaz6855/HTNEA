@@ -2219,10 +2219,14 @@ class trigWindow(QDialog):
                 self.ui.btnTrigDeg.setGeometry(670, 20, 100, 30)
                 # Moves the radians button to a position within the dropdown menu.
                 self.ui.btnTrigRad.setGeometry(670, 49, 100, 30)
+                # Moves the gradians button to a position within the dropdown menu.
+                self.ui.btnTrigGrad.setGeometry(670, 78, 100, 30)
             # The angle unit is gradians.
             case "Grad":
                 # Moves the degrees button to the top position.
                 self.ui.btnTrigDeg.setGeometry(670, 20, 100, 30)
+                # Moves the radians button to a position within the dropdown menu.
+                self.ui.btnTrigRad.setGeometry(670, 49, 100, 30)
                 # Moves the gradians button to a position within the dropdown menu.
                 self.ui.btnTrigGrad.setGeometry(670, 78, 100, 30)
         # Changes the angle unit variable to degrees.
@@ -2238,12 +2242,16 @@ class trigWindow(QDialog):
                 self.ui.btnTrigRad.setGeometry(670, 20, 100, 30)
                 # Moves the degrees button to a position within the dropdown menu.
                 self.ui.btnTrigDeg.setGeometry(670, 49, 100, 30)
+                # Moves the gradians button to a position within the dropdown menu.
+                self.ui.btnTrigGrad.setGeometry(670, 78, 100, 30)
             # The angle unit is gradians.
             case "Grad":
                 # Moves the radians button to the top position.
                 self.ui.btnTrigRad.setGeometry(670, 20, 100, 30)
                 # Moves the gradians button to a position within the dropdown menu.
                 self.ui.btnTrigGrad.setGeometry(670, 78, 100, 30)
+                # Moves the degrees button to a position within the dropdown menu.
+                self.ui.btnTrigDeg.setGeometry(670, 49, 100, 30)
         # Changes the angle unit variable to radians.
         self.ui.trigAngle = "Rad"
 
@@ -2257,10 +2265,14 @@ class trigWindow(QDialog):
                 self.ui.btnTrigGrad.setGeometry(670, 20, 100, 30)
                 # Moves the degrees button to a position within the dropdown menu.
                 self.ui.btnTrigDeg.setGeometry(670, 78, 100, 30)
+                # Moves the radians button to a position within the dropdown menu.
+                self.ui.btnTrigRad.setGeometry(670, 49, 100, 30)
             # The angle unit is radians.
             case "Rad":
                 # Moves the gradians button to the top position.
                 self.ui.btnTrigGrad.setGeometry(670, 20, 100, 30)
+                # Moves the degrees button to a position within the dropdown menu.
+                self.ui.btnTrigDeg.setGeometry(670, 49, 100, 30)
                 # Moves the radians button to a position within the dropdown menu.
                 self.ui.btnTrigRad.setGeometry(670, 78, 100, 30)
         # Changes the angle unit variable to gradians.
@@ -2725,5 +2737,3 @@ if __name__ == "__main__":
     mainPage.show()
     # Executes the application.
     app.exec()
-
-
