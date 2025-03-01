@@ -2511,7 +2511,7 @@ class trigWindow(QDialog):
             # Outputs an error message to the user.
             QMessageBox.critical(self, "Error", "Invalid angle.")
             return ValueError
-        # Checks if the input value is greater than -1 and less than 1.
+        # Checks if the input value is greater than or equal to -1 and less than or equal to 1.
         if trigInput >= -1 and trigInput <= 1:
             # Calculates the arcsine of the input value.
             trigOutput = asin(trigInput)
@@ -2534,23 +2534,186 @@ class trigWindow(QDialog):
 
     # Defines the arccosine function.
     def arccosine(self):
-        pass
+        # Temporarily stores the value input by the user.
+        trigInput = self.ui.txtTrigInput.text()
+        # Checks if the input value is empty.
+        if trigInput == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an angle.")
+            return ValueError
+        # Checks that the input value is a number.
+        try:
+            # Converts the input value to a number.
+            trigInput = float(trigInput)
+        # Catches any value errors.
+        except ValueError:
+            # Returns an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid angle.")
+            return ValueError
+        # Checks if the input value is greater than or equal to -1 and less than or equal to 1.
+        if trigInput >= -1 and trigInput <= 1:
+            # Calculates the arccosine of the input value.
+            trigOutput = acos(trigInput)
+            # Checks the angle unit.
+            match self.ui.trigAngle:
+                # The angle unit is degrees.
+                case "Deg":
+                    # Converts the angle output into degrees.
+                    trigOutput = toDeg(trigOutput, "Rad")
+                # The angle unit is gradians.
+                case "Grad":
+                    # Converts the angle output into gradians.
+                    trigOutput = toGrad(trigOutput, "Rad")
+        # If the input value is invalid.
+        else:
+            # Returns undefined.
+            trigOutput = "Undefined"
+        # Outputs the arccosine value.
+        self.ui.txtTrigOutput.setText(str(trigOutput))
 
     # Defines the arctangent function.
     def arctangent(self):
-        pass
+        # Temporarily stores the value input by the user.
+        trigInput = self.ui.txtTrigInput.text()
+        # Checks if the input value is empty.
+        if trigInput == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an angle.")
+            return ValueError
+        # Checks that the input value is a number.
+        try:
+            # Converts the input to a number.
+            trigInput = float(trigInput)
+        # Catches any value errors.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid angle.")
+            return ValueError
+        # Calculates the arctan of the input value.
+        trigOutput = atan(trigInput)
+        # Checks the angle unit.
+        match self.ui.trigAngle:
+            # The angle unit is degrees.
+            case "Deg":
+                # Converts the angle into degrees.
+                trigOutput = toDeg(trigOutput, "Rad")
+            # The angle unit is gradians.
+            case "Grad":
+                # Converts the angle into gradians.
+                trigOutput = toGrad(trigOutput, "Rad")
+        # Outputs the arctan value.
+        self.ui.txtTrigOutput.setText(str(trigOutput))
 
     # Defines the arccosecant function.
     def arccosecant(self):
-        pass
+        # Temporarily stores the value input by the user.
+        trigInput = self.ui.txtTrigInput.text()
+        # Checks if the input value is empty.
+        if trigInput == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an angle.")
+            return ValueError
+        # Checks if the input value is a number.
+        try:
+            # Converts the input value to a number.
+            trigInput = float(trigInput)
+        # Catches any value errors.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid angle.")
+            return ValueError
+        # Checks if the input value is greater than or equal to 1 or less than or equal to -1.
+        if trigInput >= 1 or trigInput <= -1:
+            # Calculates the arccosecant of the input value.
+            trigOutput = asin(1 / trigInput)
+            # Checks the angle unit.
+            match self.ui.trigAngle:
+                # The angle unit is degrees.
+                case "Deg":
+                    # Converts the angle into degrees.
+                    trigOutput = toDeg(trigOutput, "Rad")
+                # The angle unit is gradians.
+                case "Grad":
+                    # Converts the angle into gradians.
+                    trigOutput = toGrad(trigOutput, "Rad")
+        # If the input value is invalid.
+        else:
+            # Returns undefined.
+            trigOutput = "Undefined"
+        # Outputs the arccosecant value.
+        self.ui.txtTrigOutput.setText(str(trigOutput))
 
     # Defines the arcsecant function.
     def arcsecant(self):
-        pass
+        # Temporarily stored the value input by the user.
+        trigInput = self.ui.txtTrigInput.text()
+        # Checks if the input value is empty.
+        if trigInput == "":
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an angle.")
+            return ValueError
+        # Checks if the input value is a number.
+        try:
+            # Converts the input value into a number.
+            trigInput = float(trigInput)
+        # Catches any value errors.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid angle.")
+            return ValueError
+        # Checks if the input value is greater than or equal to 1 or less than or equal to -1.
+        if trigInput >= 1 or trigInput <= -1:
+            # Calculates the arcsecant of the input value.
+            trigOutput = acos(1 / trigInput)
+            # Checks the angle unit.
+            match self.ui.trigAngle:
+                # The angle unit is degrees.
+                case "Deg":
+                    # Converts the angle into degrees.
+                    trigOutput = toDeg(trigOutput, "Rad")
+                # The angle unit is gradians.
+                case "Grad":
+                    # Converts the angle into gradians.
+                    trigOutput = toGrad(trigOutput, "Rad")
+        # If the input value is invalid.
+        else:
+            # Returns undefined.
+            trigOutput = "Undefined"
+        # Outputs the arcsecant value.
+        self.ui.txtTrigOutput.setText(str(trigOutput))
 
     # Defines the arccotangent function.
     def arccotangent(self):
-        pass
+        # Temporarily stores the value input by the user.
+        trigInput = self.ui.txtTrigInput.text()
+        # Checks if the value input by the user is empty.
+        if trigInput == "":
+            # Ouputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Please enter an angle.")
+            return ValueError
+        # Checks if the input value is a number.
+        try:
+            # Converts the input value to a number.
+            trigInput = float(trigInput)
+        # Catches any value errors.
+        except ValueError:
+            # Outputs an error message to the user.
+            QMessageBox.critical(self, "Error", "Invalid angle.")
+            return ValueError
+        # Calculates the arccotangent of the input value.
+        trigOutput = atan(1 / trigInput)
+        # Checks the angle unit.
+        match self.ui.trigAngle:
+            # The angle unit is degrees.
+            case "Deg":
+                # Converts the angle into degrees.
+                trigOutput = toDeg(trigOutput, "Rad")
+            # The angle unit is gradians.
+            case "Grad":
+                # Converts the angle into gradians.
+                trigOutput = toGrad(trigOutput, "Rad")
+        # Outputs the arccotangent value.
+        self.ui.txtTrigOutput.setText(str(trigOutput))
 
 # Runs the program if the file ran is the main file.
 if __name__ == "__main__":
