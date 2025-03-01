@@ -73,3 +73,6 @@ def toGrad(trigInput, trigAngle):
 
     # Returns the converted angle.
     return trigInput
+
+if __name__ == "__main__":
+    print(toGrad("a", "Rad"))

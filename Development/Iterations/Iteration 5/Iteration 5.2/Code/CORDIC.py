@@ -129,8 +129,8 @@ def calcK(n):
 
 # Runs the program
 if __name__ == "__main__":
-    results = CORDIC(pi)
-    if len(results) == 1:
+    results = CORDIC(pi/2)
+    if len(results) != 3:
         print(results)
     else:
         print(f"Cosine: {results[0]}\n",
