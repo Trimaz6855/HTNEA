@@ -13,10 +13,10 @@ My project is a graphical and scientific calculator.
 - Iteration 3 - Function Graphing.
     - Iteration 3.1 - Function Catalogue. / Completed!
     - Iteration 3.2 - Implicit Function Graphing and Saving. / Completed!
-    - Iteration 3.3 - Algebraic Function Graphing and Saving (2D and 3D).
-- Iteration 4 - Statistical Functions.
-    - Iteration 4.1 - Poisson Distribution.
-    - Iteration 4.2 - Binomial Distribution.
-- Iteration 5 - Trigonometric Functions.
-    - Iteration 5.1 - Standard Trigonometry.
-    - Iteration 5.2 - Inverse Trigonometry.
+    - Iteration 3.3 - Algebraic Function Graphing and Saving (2D and 3D). / Completed!
+- Iteration 4 - Statistical Functions. / Completed!
+    - Iteration 4.1 - Poisson Distribution. / Completed!
+    - Iteration 4.2 - Binomial Distribution. / Completed!
+- Iteration 5 - Trigonometric Functions. / Completed!
+    - Iteration 5.1 - Standard Trigonometry. / Completed!
+    - Iteration 5.2 - Inverse Trigonometry. / Completed!
